@@ -1,0 +1,120 @@
+Defn:
+- FE = Frontend
+- BE = Backend
+- Func = Functionality
+- DB = Database
+
+- Fulfill Order marks the order as fulfilled (this leaves room to implement Order History extra credit).
+- Make/Place Order page
+- Pickup Order page
+- Pickup Order marks the order as picked up (this leaves room to implement Order History extra credit).
+- A customer can only order 1 beverage at a time (for now, to keep things simple. This leaves room to implement multi-beverage orders for Functionality extra credit).
+
+- For now, Managers hold in-person interviews with Barista candidates to select Baristas.
+  - An accepted Barista candidate tells the Manager their username preference, and the Manager submits that to the backend via the Add Barista form.
+  - If the username is already taken, the system displays an error message to the Manager, and the Manager asks the accepted Barista candidate for a different username.
+  - If the username is unique, the system displays a success message to the Manager, and auto-generates a password for the accepted Barista candidate.
+  - Free and open-source external software monitors the backend for addBarista() API calls, and upon such a call being made, automatically displays the password on a screen in a different (private) room without the Manager.
+  - The accepted Barista candidate steps into the private room to view and note down their auto-generated password.
+
+FE:
+- only show func for curr usr role
+
+BE:
+- func:
+  - page does not exist => method in MappingController
+  - mod DB => func in API class
+  - check info against DB => func in API class
+  - mod entity => method in model class
+
+- entity:
+  - model class
+  - service class
+  - repository interface
+
+- entity data:
+  - saved in DB => field in model class
+
+- API class:
+  - service field in API class
+  - service class
+  - repository interface
+
+Issues found:
+ - When initially going to the main page, and then trying to do anything involving data entry, the text cursor sometimes does not show.
+   - Browser: Google Chrome
+   - Operating System: Windows 11
+
+Ideas:
+  - For View/Fulfill Order, reuse the Edit Recipe form
+    - Select Order to Fulfill
+    - Show Order details
+    - "Fulfill Order" button
+    - "Reset Form" button
+
+  - For Make/Place Order, reuse the Make Coffee form
+    - Select Beverage/Recipe to order.
+    - Enter payment.
+    - "Order Beverage" button.
+
+  - For Add Barista, reuse the Add Ingredient form.
+    - Username label and text field
+    - "Add Barista" button
+    - "Reset Form" button
+    - "Home" button
+
+  - For Remove Barista, reuse the Delete Recipe form.
+    - Select Barista to remove
+    - "Delete" button
+    - "Home" button
+    - Comment out the "Delete all recipes" checkbox.
+
+  - For Authentication, reuse the Add Ingredient form.
+    - Username label and text field
+    - Password label and text field
+      - Privacy: Show typed characters as asterisks
+
+    - "Login" button.
+      - After checking credentials, save the UserRole in persistent browser storage.
+
+    - "Create Customer Account" button.
+
+  - For the List of Actions for User, modify the CoffeeMaker Homepage / index.
+    - Show user role somewhere
+      - Retrieve the user role info from persistent browser storage
+
+    - Show options as defined in Use Case 1 Requirements
+    - Show pending and fulfilled orders
+      - User refreshes page manually to fetch status updates, or the page auto-reloads like every 20 sec or so.
+
+  - For Create Customer Account, reuse Add Ingredient
+    - Username label and text field
+    - Password label and text field
+    - "Create Account" button.
+
+  - Order.advanceStatus() moves the order to the next status/phase.
+    - The Order status lifecycle is a strict linear progression from PENDING -> FULFILLED -> PICKEDUP
+
+  - Do form validation on the Front-End as much as possible.
+  - APIOrderController.viewOrdersCustomer() calculates the elapsed time in hours since the order was placed for all orders corresponding to that customer
+    - Use Java.lang.System.currentTimeMillis() to check this.
+
+Edits To Requirements:
+- UC 1:
+  - 3a. Manager - Add "Add Barista" and "Remove Barista" options
+  - 3b. (Barista)
+    - Change staff to barista.
+    - Add "Update Inventory" option
+
+  - 3c and 3d. Add "Place an Order" option
+
+- UC 9:
+  - Rename "Concurrent Deletion" to "Concurrent Fulfillment"
+    - Change "removed" to "fulfilled"
+
+- UC 10:
+  - Subflows - rename "S3" to "S2".
+  - Consider changing the "8-hour" timeout to a much shorter "mock" value for the practicality of System Testing.
+    - Ex. 2 min?
+
+  - Change Customer Review to have one field named "review" and format of "non-empty string"
