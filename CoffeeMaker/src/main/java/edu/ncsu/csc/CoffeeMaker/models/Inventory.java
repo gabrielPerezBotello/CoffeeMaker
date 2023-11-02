@@ -20,6 +20,9 @@ import javax.persistence.OneToMany;
 @Entity
 public class Inventory extends DomainObject {
 
+    private int              nextGuestID;
+    private int              nextOrderID;
+
     /** id for inventory entry */
     @Id
     @GeneratedValue
@@ -34,6 +37,8 @@ public class Inventory extends DomainObject {
      */
     public Inventory () {
         this.ingredients = new ArrayList<Ingredient>();
+        this.nextGuestID = 0;
+        this.nextOrderID = 0;
         // Intentionally empty so that Hibernate can instantiate
         // Inventory object.
     }
@@ -215,6 +220,16 @@ public class Inventory extends DomainObject {
             }
         }
         return null;
+    }
+
+    public int getIncrNextGuestID () {
+        final int val = nextGuestID++;
+        return val;
+    }
+
+    public int getIncrNextOrderID () {
+        final int val = nextOrderID++;
+        return val;
     }
 
     /**
