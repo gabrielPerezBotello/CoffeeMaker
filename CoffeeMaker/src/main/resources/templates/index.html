@@ -1,38 +1,172 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Welcome to the CSC326 CoffeeMaker</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Login</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: red;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+.lead {
+	width: 160px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -80px; /*half the size of width*/
+}
+
+.submit {
+	width: 220px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -110px; /*half the size of width*/
+}
+
+.reset {
+	width: 220px;
+ 	position: relative;
+ 	left: 55%;
+ 	margin-left: -110px; /*half the size of width*/
+ 	bottom: 29px;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
-		
+
 	<script>
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
-		app.controller('indexCtrl', function($scope, $http, $q) {
-			$scope.inv = true
-			$scope.recipe = true
-			$scope.edit = true
-			$scope.delete = true
-			$scope.make = true
-			$scope.ing = true
+		app.controller('loginCtrl', function($scope, $http, $q) {
+
+			$scope.reset = function() {
+				$scope.login = {
+					name : '',
+					amount : ''
+				};
+				if (undefined != $scope.loginForm) {
+					$scope.loginForm.$setPristine(); // reset Form
+				}
+			}
+
+			$scope.submit = function() {
+				$scope.login();
+
+				$scope.reset();
+			}
+
+			$scope.login = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				$scope.duplicate = false;
+				// console.log($scope.login);
+				$scope.tempName = $scope.login.name;
+
+				$http.post("/api/v1/inventory", $scope.login).then(
+						function(success) {
+							$scope.success = true;
+							$scope.failure = false;
+							$scope.duplicate = false;
+						}, function(rejection) {
+							$scope.success = false;
+							$scope.failure = false;
+							$scope.duplicate = true;
+							console.error("Error while adding login");
+						});
+			}
+
+			$scope.reset();
+
 		});
 		/*]]>*/
 	</script>
-	<div ng-app="myApp"
-		ng-controller="indexCtrl as ctrl">
-		<h1>Coffee Maker</h1>
-		<h2>Available Options</h2>
-		<ul>
-			<li ng-show="inv"><a href="inventory.html">Update Inventory</a></li>
-			<li ng-show="recipe"><a href="recipe.html">Add a Recipe</a></li>
-			<li ng-show="edit"><a href="editrecipe.html">Edit Recipe</a></li>
-			<li ng-show="delete"><a href="deleterecipe.html">Delete Recipe</a></li>
-			<li ng-show="make"><a href="makecoffee.html">Make Coffee</a></li>
-			<li ng-show="ing"><a href="ingredient.html">Add Ingredient</a></li>
-		</ul>
+
+
+
+	<div ng-app="myApp" class="generic-container ng-cloak"
+		ng-controller="loginCtrl as ctrl">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h1><center>Coffeemaker Login Page</center></h1>
+			</div>
+
+			<div class="formcontainer">
+				<form ng-submit="submit()" name="loginForm"
+					class="form-horizontal">
+
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Username</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="login.username" name="username"
+									class="username form-control input-sm"
+									placeholder="Enter valid username" required="0" />
+								<div class="has-error" ng-show="loginForm.$dirty">
+									<span ng-show="loginForm.name.$error.required">This
+										is a required field.</span> <span
+										ng-show="loginForm.name.$invalid">This field is
+										invalid.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Password</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="login.password" name="password"
+									class="password form-control input-sm"
+									placeholder="Enter valid password" required="0" min="0"/>
+								<div class="has-error" ng-show="loginForm.$dirty">
+									<span ng-show="loginForm.amount.$error.required">This
+										is a required field</span> <span
+										ng-show="loginForm.amount.$error.min">Invalid 
+										Amount</span> <span ng-show="loginForm.amount.$invalid">This
+										field is invalid </span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="form-actions float"> <!-- Used to align the submit and reset buttons. -->
+							<div class="submit">
+								<input type="submit" value="Login"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid" />
+								</div>
+							<div class="reset">
+								<button type="button" ng-click="reset()"
+									class="btn btn-warning btn-sm"
+									ng-disabled="loginForm.$pristine">Reset Form</button>
+								</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div ng-show="success">{{tempName}} Added</div>
+			<div ng-show="failure">Error while adding ingredient</div>
+			<div ng-show="duplicate">Ingredient already exists</div>
+		</div>
+
+		<a href="/index">Home</a>
 	</div>
+
+
+
 </body>
 </html>

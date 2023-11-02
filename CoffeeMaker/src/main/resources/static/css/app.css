@@ -7,6 +7,10 @@ body, .form-control {
 	font-size: 12px !important;
 }
 
+.margins {
+	background-color: red;
+}
+
 .floatRight {
 	float: right;
 	margin-right: 18px;
