@@ -20,10 +20,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class Inventory extends DomainObject {
 
-    /** Current guest ID */
+    /** The next Guest's ID. */
     private Integer          nextGuestID;
 
-    /** Current order ID */
+    /** The next Order's ID. */
     private Integer          nextOrderID;
 
     /** id for inventory entry */

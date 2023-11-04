@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class User extends DomainObject {
 
-    /** Recipe id */
+    /** User id */
     @Id
     @GeneratedValue
     private Long     id;
