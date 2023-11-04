@@ -8,7 +8,7 @@ input.ng-valid {
 }
 
 input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
-	background-color: red;
+	background-color: #FF7276;
 }
 
 input.ng-dirty.ng-invalid-min {
@@ -53,8 +53,8 @@ input.ng-dirty.ng-invalid-min {
 
 			$scope.reset = function() {
 				$scope.login = {
-					name : '',
-					amount : ''
+					username : '',
+					password : ''
 				};
 				if (undefined != $scope.loginForm) {
 					$scope.loginForm.$setPristine(); // reset Form
@@ -62,9 +62,14 @@ input.ng-dirty.ng-invalid-min {
 			}
 
 			$scope.submit = function() {
+				console.log($scope.login)
 				$scope.login();
 
 				$scope.reset();
+			}
+			
+			$scope.newacc = function() {
+				console.log($scope.login)
 			}
 
 			$scope.login = function() {
@@ -149,10 +154,10 @@ input.ng-dirty.ng-invalid-min {
 									class="btn btn-primary btn-sm"
 									ng-disabled="loginForm.$invalid" />
 								</div>
-							<div class="reset">
-								<button type="button" ng-click="reset()"
-									class="btn btn-warning btn-sm"
-									ng-disabled="loginForm.$pristine">Reset Form</button>
+							<div class="submit">
+								<button type="button" ng-click="newacc()"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid">Create New Account</button>
 								</div>
 						</div>
 					</div>
