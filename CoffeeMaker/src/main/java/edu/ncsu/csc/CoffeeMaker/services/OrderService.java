@@ -23,12 +23,12 @@ public class OrderService extends Service<Order, Long> {
         return orderRepository;
     }
 
-    public Order findByName ( final String name ) {
-        return orderRepository.findByName( name );
+    public Order findByCustomerName ( final String name ) {
+        return orderRepository.findByCustomerName( name );
     }
 
-    public Order findByID ( final Integer orderID ) {
-        return orderRepository.findByID( orderID );
+    public Order findByOrderID ( final Integer orderID ) {
+        return orderRepository.findByOrderID( orderID );
     }
 
     public List<Order> getOrders () {

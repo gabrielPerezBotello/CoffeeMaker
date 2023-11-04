@@ -11,7 +11,6 @@ import javax.validation.constraints.Min;
 @Entity
 public class Order extends DomainObject {
 
-    /** Order id */
     @Id
     @GeneratedValue
     private Long         id;
