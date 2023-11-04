@@ -8,13 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
-/**
- * Recipe for the coffee maker. Recipe is tied to the database using Hibernate
- * libraries. See RecipeRepository and RecipeService for the other two pieces
- * used for database support.
- *
- * @author Kai Presler-Marshall
- */
 @Entity
 public class Order extends DomainObject {
 
@@ -25,7 +18,6 @@ public class Order extends DomainObject {
 
     private final String customerName;
 
-    /** Recipe name */
     private OrderStatus  status;
 
     private Integer      orderID;
@@ -50,9 +42,6 @@ public class Order extends DomainObject {
         this.recipe = recipe;
     }
 
-    /**
-     * Creates a default recipe for the coffee maker.
-     */
     public Order ( final String customerName ) {
         this.customerName = customerName;
 
@@ -68,11 +57,6 @@ public class Order extends DomainObject {
 
     }
 
-    /**
-     * Returns the name of the recipe.
-     *
-     * @return String
-     */
     @Override
     public String toString () {
         final String rtn = customerName + ": ";
