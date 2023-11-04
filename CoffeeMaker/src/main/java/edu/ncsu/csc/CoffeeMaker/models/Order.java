@@ -97,15 +97,19 @@ public class Order extends DomainObject {
 
     }
 
+    /**
+     * returns a string descriptor of the object
+     */
     @Override
     public String toString () {
         final String rtn = customerName + ": ";
 
-        // Use for each loop to go through every entry in map
-
         return rtn;
     }
 
+    /**
+     * generates a hash code for the Order
+     */
     @Override
     public int hashCode () {
         final int prime = 31;
@@ -114,6 +118,9 @@ public class Order extends DomainObject {
         return result;
     }
 
+    /**
+     * checks if 2 orders are equal
+     */
     @Override
     public boolean equals ( final Object obj ) {
         if ( this == obj ) {
