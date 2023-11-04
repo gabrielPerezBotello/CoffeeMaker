@@ -114,7 +114,11 @@ public class Order extends DomainObject {
     @Override
     public Serializable getId () {
 
-        return null;
+        return id;
+    }
+
+    public void setId ( final Long id ) {
+        this.id = id;
     }
 
     public String getCustomerName () {
