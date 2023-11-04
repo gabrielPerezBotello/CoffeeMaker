@@ -398,6 +398,9 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Tests the ID methods and fields
+     */
     @Test
     @Transactional
     public void testIDs () {

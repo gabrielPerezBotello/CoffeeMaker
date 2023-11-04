@@ -20,7 +20,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class Inventory extends DomainObject {
 
+    /** Current guest ID */
     private Integer          nextGuestID;
+
+    /** Current order ID */
     private Integer          nextOrderID;
 
     /** id for inventory entry */
@@ -222,11 +225,21 @@ public class Inventory extends DomainObject {
         return null;
     }
 
+    /**
+     * Returns the current guest ID and increments it
+     *
+     * @return Current guest ID
+     */
     public int getIncrNextGuestID () {
         final int val = nextGuestID++;
         return val;
     }
 
+    /**
+     * Returns the current order ID and increments it
+     *
+     * @return Current order ID
+     */
     public int getIncrNextOrderID () {
         final int val = nextOrderID++;
         return val;
