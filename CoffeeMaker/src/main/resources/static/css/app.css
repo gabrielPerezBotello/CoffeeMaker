@@ -8,7 +8,7 @@ body, .form-control {
 }
 
 .margins {
-	background-color: red;
+	background-color: #FF7276;
 }
 
 .floatRight {
@@ -17,7 +17,7 @@ body, .form-control {
 }
 
 .has-error {
-	color: red;
+	color: #FF7276;
 }
 
 .formcontainer {
@@ -50,7 +50,7 @@ body, .form-control {
 }
 
 .username.ng-dirty.ng-invalid-required {
-	background-color: red;
+	background-color: #FF7276;
 }
 
 .username.ng-dirty.ng-invalid-min {
@@ -62,5 +62,5 @@ body, .form-control {
 }
 
 .email.ng-dirty.ng-invalid-required {
-	background-color: red;
+	background-color: #FF7276;
 }
