@@ -2,12 +2,10 @@ package edu.ncsu.csc.CoffeeMaker.models;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 
 /**
@@ -41,7 +39,7 @@ public class Order extends DomainObject {
     @Min ( 0 )
     private Integer      payment;
 
-    @OneToMany ( cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+    @OneToOne
     private Recipe       recipe;
 
     public Recipe getRecipe () {
