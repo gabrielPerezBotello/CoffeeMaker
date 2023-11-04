@@ -18,14 +18,23 @@ import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.models.UserRole;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
+/**
+ * Tests the User class
+ */
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
 @SpringBootTest ( classes = TestConfig.class )
 public class UserTest {
 
+    /**
+     * UserService object to be used in testing
+     */
     @Autowired
     private UserService service;
 
+    /**
+     * User object to be used in testing
+     */
     private User        tav;
 
     /**
@@ -37,6 +46,9 @@ public class UserTest {
         tav = new User( "Tav", "password123", UserRole.CUSTOMER );
     }
 
+    /**
+     * Tests creation of User in database
+     */
     @Test
     @Transactional
     void testUser () {
@@ -53,12 +65,18 @@ public class UserTest {
         Assertions.assertEquals( barista, users.get( 1 ), "Second user should be the barista" );
     }
 
+    /**
+     * Tests getUsername()
+     */
     @Test
     @Transactional
     void testGetUsername () {
         Assertions.assertEquals( "Tav", tav.getUsername() );
     }
 
+    /**
+     * Tests setUsername()
+     */
     @Test
     @Transactional
     void testSetUsername () {
@@ -66,12 +84,18 @@ public class UserTest {
         Assertions.assertEquals( "DiffUsername", tav.getUsername() );
     }
 
+    /**
+     * Tests getPassword
+     */
     @Test
     @Transactional
     void testGetPassword () {
         Assertions.assertEquals( "password123", tav.getPassword() );
     }
 
+    /**
+     * Tests setPassword
+     */
     @Test
     @Transactional
     void testSetPassword () {
@@ -79,12 +103,18 @@ public class UserTest {
         Assertions.assertEquals( "newpassword123", tav.getPassword() );
     }
 
+    /**
+     * Tests getRole()
+     */
     @Test
     @Transactional
     void testGetRole () {
         Assertions.assertEquals( UserRole.CUSTOMER, tav.getRole() );
     }
 
+    /**
+     * Tests setRole()
+     */
     @Test
     @Transactional
     void testSetRole () {

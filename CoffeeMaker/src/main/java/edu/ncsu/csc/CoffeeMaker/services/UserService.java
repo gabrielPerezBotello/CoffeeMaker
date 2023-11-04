@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.repositories.UserRepository;
 
+/**
+ * The UserService is used to handle CRUD operations on the User model.
+ *
+ */
 @Component
 @Transactional
 public class UserService extends Service<User, Long> {
