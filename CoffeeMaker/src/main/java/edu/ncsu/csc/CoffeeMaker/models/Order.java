@@ -3,6 +3,8 @@ package edu.ncsu.csc.CoffeeMaker.models;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.Min;
 
 /**
@@ -14,6 +16,11 @@ import javax.validation.constraints.Min;
  */
 @Entity
 public class Order extends DomainObject {
+
+    /** Order id */
+    @Id
+    @GeneratedValue
+    private Long         id;
 
     private final String customerName;
 
