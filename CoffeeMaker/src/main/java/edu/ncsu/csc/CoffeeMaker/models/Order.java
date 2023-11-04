@@ -31,6 +31,16 @@ public class Order extends DomainObject {
     @Min ( 0 )
     private Integer      payment;
 
+    private Recipe       recipe;
+
+    public Recipe getRecipe () {
+        return recipe;
+    }
+
+    public void setRecipe ( final Recipe recipe ) {
+        this.recipe = recipe;
+    }
+
     /**
      * Creates a default recipe for the coffee maker.
      */
