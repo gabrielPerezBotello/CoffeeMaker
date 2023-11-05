@@ -8,25 +8,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import edu.ncsu.csc.CoffeeMaker.models.Order;
-import edu.ncsu.csc.CoffeeMaker.repositories.OrderRepository;
+import edu.ncsu.csc.CoffeeMaker.models.CustomerOrder;
+import edu.ncsu.csc.CoffeeMaker.repositories.CustomerOrderRepository;
 
 /**
  * Service for orders
  */
 @Component
 @Transactional
-public class OrderService extends Service<Order, Long> {
+public class CustomerOrderService extends Service<CustomerOrder, Long> {
 
     /**
      * order repository
      */
     @Autowired
-    private OrderRepository orderRepository;
+    private CustomerOrderRepository customerOrderRepository;
 
     @Override
-    protected JpaRepository<Order, Long> getRepository () {
-        return orderRepository;
+    protected JpaRepository<CustomerOrder, Long> getRepository () {
+        return customerOrderRepository;
     }
 
     /**
@@ -36,8 +36,8 @@ public class OrderService extends Service<Order, Long> {
      *            customers name
      * @return Order
      */
-    public Order findByCustomerName ( final String name ) {
-        return orderRepository.findByCustomerName( name );
+    public CustomerOrder findByCustomerName ( final String name ) {
+        return customerOrderRepository.findByCustomerName( name );
     }
 
     /**
@@ -47,8 +47,8 @@ public class OrderService extends Service<Order, Long> {
      *            order id
      * @return Order
      */
-    public Order findByOrderID ( final Integer orderID ) {
-        return orderRepository.findByOrderID( orderID );
+    public CustomerOrder findByOrderID ( final Integer orderID ) {
+        return customerOrderRepository.findByOrderID( orderID );
     }
 
     /**
@@ -56,7 +56,7 @@ public class OrderService extends Service<Order, Long> {
      *
      * @return List of Orders
      */
-    public List<Order> getOrders () {
-        return orderRepository.findAll();
+    public List<CustomerOrder> getOrders () {
+        return customerOrderRepository.findAll();
     }
 }

@@ -2,12 +2,12 @@ package edu.ncsu.csc.CoffeeMaker.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import edu.ncsu.csc.CoffeeMaker.models.Order;
+import edu.ncsu.csc.CoffeeMaker.models.CustomerOrder;
 
 /**
  * Repository for orders
  */
-public interface OrderRepository extends JpaRepository<Order, Long> {
+public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Long> {
 
     /**
      * finds the order connected with a customers name
@@ -16,7 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      *            customers name
      * @return Order
      */
-    Order findByCustomerName ( String name );
+    CustomerOrder findByCustomerName ( String name );
 
     /**
      * returns the order connected with the order id
@@ -25,6 +25,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
      *            order id
      * @return Order
      */
-    Order findByOrderID ( Integer orderID );
+    CustomerOrder findByOrderID ( Integer orderID );
 
 }
