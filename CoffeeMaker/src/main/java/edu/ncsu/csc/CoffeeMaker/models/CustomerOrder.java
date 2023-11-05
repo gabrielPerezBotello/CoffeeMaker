@@ -22,13 +22,13 @@ public class CustomerOrder extends DomainObject {
      * Represents the value of the review field BEFORE it is set to a valid
      * (i.e. non-empty) String.
      */
-    private final String  REVIEW_NOT_SET  = null;
+    private final String  const_REVIEW_NOT_SET  = null;
 
     /**
      * Represents the value of the payment field BEFORE it is set to a valid
      * (i.e. > 0) Integer.
      */
-    private final Integer PAYMENT_NOT_SET = 0;
+    private final Integer const_PAYMENT_NOT_SET = 0;
 
     /**
      * id for Order
@@ -78,16 +78,16 @@ public class CustomerOrder extends DomainObject {
      *            customers name
      * @param orderID
      *            ID of order
-     * @param placementTime
-     *            time order was placed
+     * @param recipe
+     *            the recipe that the customer chose to order
      */
     public CustomerOrder ( final String customerName, final Integer orderID, final Recipe recipe ) {
         this.customerName = customerName;
         this.orderStatus = OrderStatus.PENDING;
         this.orderID = orderID;
-        this.review = this.REVIEW_NOT_SET;
+        this.review = this.const_REVIEW_NOT_SET;
         this.placementTime = System.currentTimeMillis();
-        this.payment = this.PAYMENT_NOT_SET;
+        this.payment = this.const_PAYMENT_NOT_SET;
         this.recipe = recipe;
 
     }
@@ -151,7 +151,7 @@ public class CustomerOrder extends DomainObject {
 
         // Check whether the review has already been set.
         //
-        if ( this.REVIEW_NOT_SET != this.getReview() ) { // begin if.
+        if ( this.const_REVIEW_NOT_SET != this.getReview() ) { // begin if.
 
             // The review has already been set,
             // and therefore we don't change it.
@@ -200,16 +200,6 @@ public class CustomerOrder extends DomainObject {
     }
 
     /**
-     * sets the recipe
-     *
-     * @param recipe
-     *            of order
-     */
-    /*
-     * public void setRecipe ( final Recipe recipe ) { this.recipe = recipe; }
-     */
-
-    /**
      * returns payment
      *
      * @return payment
@@ -228,7 +218,7 @@ public class CustomerOrder extends DomainObject {
 
         // Check whether the payment has already been made/set.
         //
-        if ( this.PAYMENT_NOT_SET != this.getPayment() ) { // begin if.
+        if ( this.const_PAYMENT_NOT_SET != this.getPayment() ) { // begin if.
 
             // The payment has already been set,
             // and therefore we don't change it.
