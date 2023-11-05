@@ -21,6 +21,14 @@ body, .form-control {
 	text-align:left;
 	padding-left:20px;
 }
+/* inspired from: https://www.w3schools.com/howto/howto_css_block_buttons.asp */
+.menuButton {
+	text-align:center;
+	margin: 5px 0px 5px 0px;
+	width: 100%;
+	font-size: 16px;
+  	cursor: pointer;
+}
 
 .floatRight {
 	float: right;

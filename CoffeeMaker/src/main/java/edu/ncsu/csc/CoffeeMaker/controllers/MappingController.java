@@ -132,5 +132,4 @@ public class MappingController {
     public String orderPage ( final Model model ) {
         return "order";
     }
-
 }
