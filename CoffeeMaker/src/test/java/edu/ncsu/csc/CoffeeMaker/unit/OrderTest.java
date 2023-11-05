@@ -96,6 +96,15 @@ public class OrderTest {
 
         assertFalse( o4.equals( o3 ) );
 
+        assertTrue( o1.getCustomerName().equals( "Sharon" ) );
+        assertTrue( o1.getOrderID().equals( 1 ) );
+        assertTrue( o1.getReview().equals( "fine" ) );
+        assertTrue( o1.getPlacementTime() == 100 );
+        assertTrue( o1.getPayment() == 15 );
+
+        assertTrue( service.findByCustomerName( "Sharon" ).equals( o1 ) );
+        assertTrue( service.findByOrderID( 1 ).equals( o1 ) );
+
     }
 
 }

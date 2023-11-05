@@ -104,7 +104,7 @@ public class Order extends DomainObject {
         if ( orderStatus.equals( OrderStatus.PENDING ) ) {
             orderStatus = OrderStatus.FULFILLED;
         }
-        else if ( orderStatus.equals( OrderStatus.PENDING ) ) {
+        else if ( orderStatus.equals( OrderStatus.FULFILLED ) ) {
             orderStatus = OrderStatus.PICKEDUP;
         }
 
