@@ -2,16 +2,20 @@ package edu.ncsu.csc.CoffeeMaker.models;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Min;
 
 /**
  * Class for making and storing orders
  */
 @Entity
+@Table ( name = "Orders" )
 public class Order extends DomainObject {
 
     /**
@@ -19,40 +23,41 @@ public class Order extends DomainObject {
      */
     @Id
     @GeneratedValue
-    private Long         id;
+    private Long          id;
 
     /**
      * customer name for Order
      */
-    private final String customerName;
+    private final String  customerName;
 
     /**
      * status of Order
      */
-    private OrderStatus  status;
+    private OrderStatus   orderStatus;
 
     /**
      * orderID for Order
      */
-    private Integer      orderID;
+    private final Integer orderID;
 
     /**
      * review for Order
      */
-    private String       review;
+    private String        review;
 
     /** placement time */
-    private Long         placementTime;
+    private final Long    placementTime;
 
     /** payment */
     @Min ( 0 )
-    private Integer      payment;
+    private Integer       payment;
 
     /**
      * Recipe
      */
-    @OneToOne
-    private Recipe       recipe;
+    @OneToOne ( cascade = CascadeType.ALL )
+    @JoinColumn ( nullable = false, name = "recipe_id" )
+    private Recipe        recipe;
 
     /**
      * returns recipe
@@ -79,20 +84,28 @@ public class Order extends DomainObject {
      * @param customerName
      *            customers name
      */
-    public Order ( final String customerName ) {
+    public Order ( final String customerName, final Integer orderID, final Long placementTime ) {
         this.customerName = customerName;
+        this.orderID = orderID;
+        this.placementTime = placementTime;
+        this.recipe = null;
+        this.orderStatus = OrderStatus.PENDING;
 
+    }
+
+    public void setPayment ( final Integer payment ) {
+        this.payment = payment;
     }
 
     /**
      * advances the order to the next stage
      */
     public void advanceOrder () {
-        if ( status.equals( OrderStatus.PENDING ) ) {
-            status = OrderStatus.FULFILLED;
+        if ( orderStatus.equals( OrderStatus.PENDING ) ) {
+            orderStatus = OrderStatus.FULFILLED;
         }
-        else if ( status.equals( OrderStatus.PENDING ) ) {
-            status = OrderStatus.PICKEDUP;
+        else if ( orderStatus.equals( OrderStatus.PENDING ) ) {
+            orderStatus = OrderStatus.PICKEDUP;
         }
 
     }
@@ -151,16 +164,6 @@ public class Order extends DomainObject {
     }
 
     /**
-     * sets the id of order
-     *
-     * @param id
-     *            id to set
-     */
-    public void setId ( final Long id ) {
-        this.id = id;
-    }
-
-    /**
      * returns customer name
      *
      * @return customer name
@@ -175,7 +178,7 @@ public class Order extends DomainObject {
      * @return status
      */
     public OrderStatus getStatus () {
-        return status;
+        return orderStatus;
     }
 
     /**
