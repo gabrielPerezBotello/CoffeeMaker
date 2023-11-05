@@ -79,10 +79,14 @@ public class Order extends DomainObject {
     }
 
     /**
-     * constructor
+     * Constructor
      *
      * @param customerName
      *            customers name
+     * @param orderID
+     *            ID of order
+     * @param placementTime
+     *            time order was placed
      */
     public Order ( final String customerName, final Integer orderID, final Long placementTime ) {
         this.customerName = customerName;
@@ -93,6 +97,12 @@ public class Order extends DomainObject {
 
     }
 
+    /**
+     * sets payment
+     *
+     * @param payment
+     *            of order
+     */
     public void setPayment ( final Integer payment ) {
         this.payment = payment;
     }
