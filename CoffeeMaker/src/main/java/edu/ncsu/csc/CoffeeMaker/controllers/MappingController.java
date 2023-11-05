@@ -107,4 +107,30 @@ public class MappingController {
         return "ingredient";
     }
 
+    /**
+     * On a GET request to /order, the HomeController will return
+     * /src/main/resources/templates/home.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/home", "/home.html" } )
+    public String homePage ( final Model model ) {
+        return "home";
+    }
+
+    /**
+     * On a GET request to /order, the OrderController will return
+     * /src/main/resources/templates/order.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/order", "/order.html" } )
+    public String orderPage ( final Model model ) {
+        return "order";
+    }
+
 }

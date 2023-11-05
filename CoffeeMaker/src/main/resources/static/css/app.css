@@ -9,6 +9,17 @@ body, .form-control {
 
 .margins {
 	background-color: #FF7276;
+	text-align: right;
+}
+
+.userHeader {
+	text-align: right;
+	padding-right: 20px;
+}
+
+.listCenter {
+	text-align:left;
+	padding-left:20px;
 }
 
 .floatRight {

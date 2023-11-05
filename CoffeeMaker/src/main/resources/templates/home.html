@@ -17,6 +17,8 @@
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('indexCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
 			$scope.user = "Manager";
 			
 			$scope.inv = true
@@ -50,11 +52,12 @@
 	<div ng-app="myApp"
 		ng-controller="indexCtrl as ctrl">
 		<div class="margins"> </div>
+		<div class="margins"> <b id = "result" class="userHeader"></b></div>
 		<div class="margins"> </div>
-		<div class="margins"> </div>
+		<center>
 		<h1>Coffee Maker</h1>
 		<h2>Available Options</h2>
-		<ul>
+		<ul class="listCenter">
 			<li ng-show="inv"><a href="inventory.html">Update Inventory</a></li>
 			<li ng-show="recipe"><a href="recipe.html">Add a Recipe</a></li>
 			<li ng-show="edit"><a href="editrecipe.html">Edit Recipe</a></li>
@@ -66,6 +69,7 @@
 			<li ng-show="order"><a href="order.html">Place Order</a></li>
 			<li ng-show="pickup"><a href="pickup.html">Pickup Order</a></li>
 		</ul>
+		</center>
 		<div class="margins"> </div>
 		<div class="margins"> </div>
 		<div class="margins"> </div>

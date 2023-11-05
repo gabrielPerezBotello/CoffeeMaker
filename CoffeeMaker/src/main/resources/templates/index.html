@@ -35,6 +35,18 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('loginCtrl', function($scope, $http, $q) {
+			
+			// If statement framework Code was sourced from: https://www.w3schools.com/html/html5_webstorage.asp
+			if (typeof(Storage) !== "undefined") {
+			  // Code for localStorage/sessionStorage.
+			  // console.log("browser does support storage");
+			  
+			  
+			  // THIS IS WHERE THE USER ID IS DEFINED
+			  sessionStorage.userID = "Manager";
+			} else {
+			  console.log("browser does not support storage");
+			}
 
 			$scope.reset = function() {
 				$scope.login = {
