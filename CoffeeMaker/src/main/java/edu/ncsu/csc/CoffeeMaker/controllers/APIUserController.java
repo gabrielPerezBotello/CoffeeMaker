@@ -51,7 +51,7 @@ public class APIUserController extends APIController { // begin class{}.
     public ResponseEntity addBarista ( @RequestBody final String username ) { // begin
         // method().
 
-        if ( null != service.findByName( username ) ) { // begin if.
+        if ( null != service.findByUsername( username ) ) { // begin if.
 
             return new ResponseEntity( errorResponse( "User with the name " + username + " already exists" ),
                     HttpStatus.CONFLICT );
