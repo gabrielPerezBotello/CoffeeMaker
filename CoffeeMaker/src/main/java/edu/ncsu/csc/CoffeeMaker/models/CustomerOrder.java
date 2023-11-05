@@ -22,54 +22,54 @@ public class CustomerOrder extends DomainObject {
      * Represents the value of the review field BEFORE it is set to a valid
      * (i.e. non-empty) String.
      */
-    private final String  const_REVIEW_NOT_SET  = null;
+    private final static String  REVIEW_NOT_SET  = null;
 
     /**
      * Represents the value of the payment field BEFORE it is set to a valid
      * (i.e. > 0) Integer.
      */
-    private final Integer const_PAYMENT_NOT_SET = 0;
+    private final static Integer PAYMENT_NOT_SET = 0;
 
     /**
      * id for Order
      */
     @Id
     @GeneratedValue
-    private Long          id;
+    private Long                 id;
 
     /**
      * customer name for Order
      */
-    private final String  customerName;
+    private final String         customerName;
 
     /**
      * status of Order
      */
-    private OrderStatus   orderStatus;
+    private OrderStatus          orderStatus;
 
     /**
      * orderID for Order
      */
-    private final Integer orderID;
+    private final Integer        orderID;
 
     /**
      * review for Order
      */
-    private String        review;
+    private String               review;
 
     /** placement time */
-    private final Long    placementTime;
+    private final Long           placementTime;
 
     /** payment */
     @Min ( 0 )
-    private Integer       payment;
+    private Integer              payment;
 
     /**
      * Recipe
      */
     @OneToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( nullable = false, name = "recipe_id" )
-    private final Recipe  recipe;
+    private final Recipe         recipe;
 
     /**
      * Constructor
@@ -85,9 +85,9 @@ public class CustomerOrder extends DomainObject {
         this.customerName = customerName;
         this.orderStatus = OrderStatus.PENDING;
         this.orderID = orderID;
-        this.review = this.const_REVIEW_NOT_SET;
+        this.review = REVIEW_NOT_SET;
         this.placementTime = System.currentTimeMillis();
-        this.payment = this.const_PAYMENT_NOT_SET;
+        this.payment = PAYMENT_NOT_SET;
         this.recipe = recipe;
 
     }
@@ -151,7 +151,7 @@ public class CustomerOrder extends DomainObject {
 
         // Check whether the review has already been set.
         //
-        if ( this.const_REVIEW_NOT_SET != this.getReview() ) { // begin if.
+        if ( REVIEW_NOT_SET != this.getReview() ) { // begin if.
 
             // The review has already been set,
             // and therefore we don't change it.
@@ -218,7 +218,7 @@ public class CustomerOrder extends DomainObject {
 
         // Check whether the payment has already been made/set.
         //
-        if ( this.const_PAYMENT_NOT_SET != this.getPayment() ) { // begin if.
+        if ( PAYMENT_NOT_SET != this.getPayment() ) { // begin if.
 
             // The payment has already been set,
             // and therefore we don't change it.
