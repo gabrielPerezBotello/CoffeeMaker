@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
+import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
 @SpringBootTest
@@ -59,6 +60,14 @@ public class APIUserTest { // begin class{}.
                 .content( TestUtils.asJsonString( baristaUsername1 ) ) ).andExpect( status().isOk() );
 
         Assertions.assertEquals( 1, (int) service.count() );
+
+        final User barista1 = service.findByUsername( baristaUsername1 );
+
+        Assertions.assertNotEquals( null, barista1 );
+
+        Assertions.assertEquals( baristaUsername1, barista1.getUsername() );
+        Assertions.assertNotEquals( "", barista1.getPassword() );
+        System.out.println( barista1.getPassword() );
 
     }
 
