@@ -24,6 +24,11 @@ import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.models.UserRole;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
+/**
+ * Tests APIUserController class.
+ *
+ * @author vmnair
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith ( SpringExtension.class )
@@ -35,9 +40,16 @@ public class APIUserTest { // begin class{}.
      */
     private MockMvc               mvc;
 
+    /**
+     * The WebApplicationContext (managed by Spring).
+     */
     @Autowired
     private WebApplicationContext context;
 
+    /**
+     * UserService object, to be autowired in by Spring to allow for
+     * manipulating the User model
+     */
     @Autowired
     private UserService           service;
 
@@ -51,6 +63,11 @@ public class APIUserTest { // begin class{}.
         service.deleteAll();
     }
 
+    /**
+     * Tests the APIUserController.addBarista() method.
+     *
+     * @throws Exception
+     */
     @Test
     @Transactional
     public void testAddBarista () throws Exception {
@@ -88,6 +105,11 @@ public class APIUserTest { // begin class{}.
 
     }
 
+    /**
+     * Tests the APIUserController.removeBarista() method.
+     *
+     * @throws Exception
+     */
     @Test
     @Transactional
     public void testRemoveBarista () throws Exception {
@@ -119,6 +141,11 @@ public class APIUserTest { // begin class{}.
 
     }
 
+    /**
+     * Tests the APIUserController.getBaristas() method.
+     *
+     * @throws Exception
+     */
     @Test
     @Transactional
     public void testGetBaristas () throws Exception { // begin method().
@@ -191,6 +218,11 @@ public class APIUserTest { // begin class{}.
 
     } // end method().
 
+    /**
+     * Tests the APIUserController.authenticate() method.
+     *
+     * @throws Exception
+     */
     @Test
     @Transactional
     public void testAuthenticate () throws Exception { // begin method().
@@ -224,6 +256,11 @@ public class APIUserTest { // begin class{}.
 
     } // end method().
 
+    /**
+     * Tests the APIUserController.createCustomerAccount() method.
+     *
+     * @throws Exception
+     */
     @Test
     @Transactional
     public void testCreateCustomerAccount () throws Exception {
@@ -271,6 +308,27 @@ public class APIUserTest { // begin class{}.
         Assertions.assertNotEquals( "", customer1.getPassword() );
 
     }
+
+    /**
+     * Tests the APIUserController.createGuestAccount() method.
+     *
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void testCreateGuestAccount () throws Exception { // begin method().
+
+        service.deleteAll();
+
+        // Test adding a Guest into the system
+        final String result = mvc.perform( post( "/api/v1/users/guests" ).contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue( result.contains( "{\"username\":\"guest0\",\"role\":\"GUEST\"}" ) );
+
+        Assertions.assertEquals( 1, (int) service.count() );
+
+    } // end method().
 
 }
 // end class{}.

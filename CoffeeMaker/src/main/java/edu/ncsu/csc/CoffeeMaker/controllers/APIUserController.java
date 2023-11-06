@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.models.UserRole;
+import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
 /**
@@ -33,10 +35,17 @@ public class APIUserController extends APIController { // begin class{}.
 
     /**
      * UserService object, to be autowired in by Spring to allow for
-     * manipulating the Recipe model
+     * manipulating the User model
      */
     @Autowired
-    private UserService service;
+    private UserService      service;
+
+    /**
+     * InventoryService object, to be autowired in by Spring to allow for
+     * manipulating the Inventory model
+     */
+    @Autowired
+    private InventoryService ivtService;
 
     /**
      * REST API method to provide POST access to the User (Barista) model. This
@@ -190,6 +199,37 @@ public class APIUserController extends APIController { // begin class{}.
         service.save( newCustomer );
 
         return new ResponseEntity( newCustomer, HttpStatus.OK );
+
+    }
+
+    /**
+     * REST API method to provide POST access to the User (Customer) model. This
+     * is used to create a new guest User (Customer) by creating a guest User
+     * (Customer) object. Invalid JSON will fail.
+     *
+     * @return response to the request
+     */
+    @PostMapping ( BASE_PATH + "/users/guests" )
+    public ResponseEntity createGuestAccount () {
+
+        final Inventory ivt = ivtService.getInventory();
+
+        final String username = "guest" + ivt.getIncrNextGuestID();
+        final String password = UUID.randomUUID().toString().substring( 0, 4 );
+
+        if ( null != service.findByUsername( username ) ) { // begin if.
+
+            return new ResponseEntity( errorResponse( "User with the name " + username + " already exists" ),
+                    HttpStatus.CONFLICT );
+
+        } // end if.
+
+        final User newGuest = new User( username, password, UserRole.CUSTOMER );
+
+        service.save( newGuest );
+        ivtService.save( ivt );
+
+        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"GUEST\"}", HttpStatus.OK );
 
     }
 
