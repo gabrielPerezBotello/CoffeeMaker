@@ -58,8 +58,13 @@ public class APIUserTest { // begin class{}.
         service.deleteAll();
 
         // Test adding a barista that does not exist in the system.
-        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista1" ) )
-                .andExpect( status().isOk() );
+        final String result = mvc
+                .perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista1" ) )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue( result.contains( "\"username\":\"barista1\"" ) );
+
+        Assertions.assertTrue( result.contains( "\"role\":\"BARISTA\"" ) );
 
         Assertions.assertEquals( 1, (int) service.count() );
 
@@ -218,6 +223,54 @@ public class APIUserTest { // begin class{}.
                 .andExpect( status().isOk() );
 
     } // end method().
+
+    @Test
+    @Transactional
+    public void testCreateCustomerAccount () throws Exception {
+
+        service.deleteAll();
+
+        // Test adding a customer that does not exist in the system.
+        final String result = mvc
+                .perform( post( "/api/v1/users/customers" ).contentType( MediaType.APPLICATION_JSON )
+                        .content( "customer1:pass1" ) )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue(
+                result.contains( "\"username\":\"customer1\",\"password\":\"pass1\",\"role\":\"CUSTOMER\"" ) );
+
+        Assertions.assertEquals( 1, (int) service.count() );
+
+        User customer1 = service.findByUsername( "customer1" );
+        Assertions.assertNotEquals( null, customer1.getUsername() );
+
+        Assertions.assertEquals( "customer1", customer1.getUsername() );
+        Assertions.assertNotEquals( "", customer1.getPassword() );
+
+        // Test adding a customer that already exists in the system.
+        mvc.perform( post( "/api/v1/users/customers" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "customer1:pass1" ) ).andExpect( status().isConflict() );
+
+        Assertions.assertEquals( 1, (int) service.count() );
+
+        customer1 = service.findByUsername( "customer1" );
+        Assertions.assertNotEquals( null, customer1.getUsername() );
+
+        Assertions.assertEquals( "customer1", customer1.getUsername() );
+        Assertions.assertNotEquals( "", customer1.getPassword() );
+
+        mvc.perform( post( "/api/v1/users/customers" ).contentType( MediaType.APPLICATION_JSON )
+                .content( "customer1:pass2" ) ).andExpect( status().isConflict() );
+
+        Assertions.assertEquals( 1, (int) service.count() );
+
+        customer1 = service.findByUsername( "customer1" );
+        Assertions.assertNotEquals( null, customer1.getUsername() );
+
+        Assertions.assertEquals( "customer1", customer1.getUsername() );
+        Assertions.assertNotEquals( "", customer1.getPassword() );
+
+    }
 
 }
 // end class{}.

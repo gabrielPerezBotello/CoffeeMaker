@@ -40,12 +40,11 @@ public class APIUserController extends APIController { // begin class{}.
 
     /**
      * REST API method to provide POST access to the User (Barista) model. This
-     * is used to create a new User (Barista) by automatically converting the
-     * JSON RequestBody provided to a User (Barista) object. Invalid JSON will
-     * fail.
+     * is used to create a new User (Barista) by creating a User (Barista)
+     * object with the provided username. Invalid JSON will fail.
      *
-     * @param user
-     *            The valid User to be saved.
+     * @param username
+     *            The username for the Barista to be added
      * @return ResponseEntity indicating success if the User could be saved to
      *         the database, or an error if it could not be.
      */
@@ -161,6 +160,36 @@ public class APIUserController extends APIController { // begin class{}.
         // the User in the system.
 
         return new ResponseEntity( HttpStatus.OK );
+
+    }
+
+    /**
+     * REST API method to provide POST access to the User (Customer) model. This
+     * is used to create a new User (Customer) by creating a User (Customer)
+     * object with the provided username and password. Invalid JSON will fail.
+     *
+     * @param usernameColonPassword
+     *            the customer's username + ":" + the customer's password
+     * @return response to the request
+     */
+    @PostMapping ( BASE_PATH + "/users/customers" )
+    public ResponseEntity createCustomerAccount ( @RequestBody final String usernameColonPassword ) {
+
+        final String username = usernameColonPassword.split( ":" )[0];
+        final String password = usernameColonPassword.split( ":" )[1];
+
+        if ( null != service.findByUsername( username ) ) { // begin if.
+
+            return new ResponseEntity( errorResponse( "User with the name " + username + " already exists" ),
+                    HttpStatus.CONFLICT );
+
+        } // end if.
+
+        final User newCustomer = new User( username, password, UserRole.CUSTOMER );
+
+        service.save( newCustomer );
+
+        return new ResponseEntity( newCustomer, HttpStatus.OK );
 
     }
 
