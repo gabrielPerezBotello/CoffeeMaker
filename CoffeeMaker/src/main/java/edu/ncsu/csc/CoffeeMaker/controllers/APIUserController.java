@@ -74,18 +74,19 @@ public class APIUserController extends APIController { // begin class{}.
      * the user to delete (as a path variable)
      *
      * @param name
-     *            The name of the User (Barista) to delete
-     * @return Success if the User (Barista) could be deleted; an error if the
-     *         User (Barista) does not exist
+     *            The username of the User (Barista) to delete
+     * @return Success if the User (Barista) with the given username could be
+     *         deleted; an error if the User (Barista) with the given username
+     *         does not exist
      */
     @DeleteMapping ( BASE_PATH + "/users/{name}" )
-    public ResponseEntity deleteRecipe ( @PathVariable final String name ) {
-        /*
-         * final Recipe recipe = service.findByName( name ); if ( null == recipe
-         * ) { return new ResponseEntity( errorResponse(
-         * "No recipe found for name " + name ), HttpStatus.NOT_FOUND ); }
-         * service.delete( recipe );
-         */
+    public ResponseEntity removeBarista ( @PathVariable final String name ) {
+        final User barista = service.findByUsername( name );
+        if ( null == barista ) {
+            return new ResponseEntity( errorResponse( "No barista found for username " + name ), HttpStatus.NOT_FOUND );
+        }
+
+        service.delete( barista );
 
         return new ResponseEntity( successResponse( name + " was deleted successfully" ), HttpStatus.OK );
     }
