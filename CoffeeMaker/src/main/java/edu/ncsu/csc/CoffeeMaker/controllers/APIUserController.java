@@ -1,11 +1,13 @@
 package edu.ncsu.csc.CoffeeMaker.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -89,6 +91,32 @@ public class APIUserController extends APIController { // begin class{}.
         service.delete( barista );
 
         return new ResponseEntity( successResponse( name + " was deleted successfully" ), HttpStatus.OK );
+    }
+
+    /**
+     * REST API method to provide GET access to all baristas in the system.
+     *
+     * @return JSON representation of all baristas in the system.
+     */
+    @GetMapping ( BASE_PATH + "/users/baristas" )
+    public List<User> getBaristas () {
+
+        final List<User> allUsers = service.findAll();
+
+        for ( int i = 0; i < allUsers.size(); i++ ) { // begin for.
+
+            final User user = allUsers.get( i );
+
+            if ( !UserRole.BARISTA.equals( user.getRole() ) ) { // begin if.
+
+                allUsers.remove( i );
+                i--;
+
+            } // end if.
+
+        } // end for.
+
+        return allUsers;
     }
 
 } // end class{}.

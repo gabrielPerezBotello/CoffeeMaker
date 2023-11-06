@@ -1,6 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker.api;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import edu.ncsu.csc.CoffeeMaker.models.User;
+import edu.ncsu.csc.CoffeeMaker.models.UserRole;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
 @SpringBootTest
@@ -98,8 +100,6 @@ public class APIUserTest { // begin class{}.
         Assertions.assertEquals( "barista1", barista1.getUsername() );
         Assertions.assertNotEquals( "", barista1.getPassword() );
 
-        /* BEGIN CRITICAL SECTION FOR TESTING removeBarista(). */
-
         // Test removing a barista that does not exist in the system.
         mvc.perform( delete( "/api/v1/users/nonexistent" ).contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isNotFound() );
@@ -114,4 +114,77 @@ public class APIUserTest { // begin class{}.
 
     }
 
-} // end class{}.
+    @Test
+    @Transactional
+    public void testGetBaristas () throws Exception { // begin method().
+
+        service.deleteAll();
+
+        // Test getting all baristas when there are no baristas in the system.
+        final String result = mvc.perform( get( "/api/v1/users/baristas" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
+
+        Assertions.assertEquals( "[]", result );
+
+        // Assertions.assertEquals( 1, (int) service.count() );
+
+        // Add 3 baristas into the system.
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista1" ) )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista2" ) )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista3" ) )
+                .andExpect( status().isOk() );
+
+        Assertions.assertEquals( 3, (int) service.count() );
+
+        // Test getting all baristas when there are 3 baristas in the system.
+        final String result2 = mvc.perform( get( "/api/v1/users/baristas" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
+
+        Assertions.assertFalse( result2.contains( "\"role\":\"CUSTOMER\"" ) );
+        Assertions.assertFalse( result2.contains( "\"role\":\"MANAGER\"" ) );
+
+        Assertions.assertTrue( result2.contains( "\"role\":\"BARISTA\"" ) );
+        Assertions.assertTrue( result2.contains( "\"username\":\"barista1" ) );
+        Assertions.assertTrue( result2.contains( "\"username\":\"barista2" ) );
+        Assertions.assertTrue( result2.contains( "\"username\":\"barista3" ) );
+
+        // Add 2 customers into the system.
+        final User customer1 = new User( "customer1", "cpass1", UserRole.CUSTOMER );
+        service.save( customer1 );
+
+        final User customer2 = new User( "customer2", "cpass2", UserRole.CUSTOMER );
+        service.save( customer2 );
+
+        // Add a manager into the system.
+        final User manager1 = new User( "manager1", "mpass1", UserRole.MANAGER );
+        service.save( manager1 );
+
+        // Test getting all baristas when there are 3 baristas, 2 customers, and
+        // 1 manager in the system.
+        final String result3 = mvc.perform( get( "/api/v1/users/baristas" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
+
+        Assertions.assertFalse( result3.contains( "\"role\":\"CUSTOMER\"" ) );
+        Assertions.assertFalse( result3.contains( "\"role\":\"MANAGER\"" ) );
+        Assertions.assertFalse( result3.contains( "\"username\":\"customer1\"" ) );
+        Assertions.assertFalse( result3.contains( "\"password\":\"cpass1\"" ) );
+        Assertions.assertFalse( result3.contains( "\"username\":\"customer2\"" ) );
+        Assertions.assertFalse( result3.contains( "\"password\":\"cpass2\"" ) );
+        Assertions.assertFalse( result3.contains( "\"username\":\"manager1\"" ) );
+        Assertions.assertFalse( result3.contains( "\"password\":\"mpass1\"" ) );
+
+        Assertions.assertTrue( result3.contains( "\"role\":\"BARISTA\"" ) );
+        Assertions.assertTrue( result3.contains( "\"username\":\"barista1" ) );
+        Assertions.assertTrue( result3.contains( "\"username\":\"barista2" ) );
+        Assertions.assertTrue( result3.contains( "\"username\":\"barista3" ) );
+
+        // Assertions.assertEquals( "[]", result2 );
+
+    } // end method().
+
+}
+// end class{}.
