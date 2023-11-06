@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
 import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
 
@@ -56,16 +55,15 @@ public class APIUserTest { // begin class{}.
 
         final String baristaUsername1 = "barista1";
 
-        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( baristaUsername1 ) ) ).andExpect( status().isOk() );
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "barista1" ) )
+                .andExpect( status().isOk() );
 
         Assertions.assertEquals( 1, (int) service.count() );
 
-        final User barista1 = service.findByUsername( baristaUsername1 );
+        final User barista1 = service.findByUsername( "barista1" );
+        Assertions.assertNotEquals( null, barista1.getUsername() );
 
-        Assertions.assertNotEquals( null, barista1 );
-
-        Assertions.assertEquals( baristaUsername1, barista1.getUsername() );
+        Assertions.assertEquals( "barista1", barista1.getUsername() );
         Assertions.assertNotEquals( "", barista1.getPassword() );
         System.out.println( barista1.getPassword() );
 
