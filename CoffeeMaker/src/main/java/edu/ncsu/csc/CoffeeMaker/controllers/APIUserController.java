@@ -119,4 +119,49 @@ public class APIUserController extends APIController { // begin class{}.
         return allUsers;
     }
 
+    /**
+     * REST API method to provide GET access to the specific user with the
+     * provided username and password (in request body) if existing. This is
+     * used to authenticate an attempted login with the provided credentials.
+     *
+     * @param usernameColonPassword
+     *            the Users's username + ":" + the User's password
+     * @return response to the request
+     */
+    @GetMapping ( BASE_PATH + "/users" )
+    public ResponseEntity authenticate ( @RequestBody final String usernameColonPassword ) {
+
+        final String username = usernameColonPassword.split( ":" )[0];
+        final String password = usernameColonPassword.split( ":" )[1];
+
+        final User user = service.findByUsername( username );
+
+        // Check whether there is no User in the system with the given username.
+        //
+        if ( null == user ) { // begin if.
+
+            return new ResponseEntity( errorResponse( "No user with username \"" + username + "\" exists." ),
+                    HttpStatus.UNAUTHORIZED );
+
+        } // end if.
+
+        // There is a User in the system with the given username.
+
+        // Check whether the given password does NOT match with the password of
+        // the User in the system.
+        //
+        if ( !password.equals( user.getPassword() ) ) { // begin if.
+
+            return new ResponseEntity( errorResponse( "No user with username \"" + username + "\" exists." ),
+                    HttpStatus.UNAUTHORIZED );
+
+        } // end if.
+
+        // The provided username and password match the username and password of
+        // the User in the system.
+
+        return new ResponseEntity( HttpStatus.OK );
+
+    }
+
 } // end class{}.
