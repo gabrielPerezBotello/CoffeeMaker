@@ -69,27 +69,26 @@ input.ng-dirty.ng-invalid-min {
 
 			$scope.submit = function() {
 				$scope.verifyInputs();
-				if(!$scope.invalidusername && !$scope.invalidpassword){
-					console.log("Authenticating " + $scope.login.username)
-					$scope.authenticate();
-				}
+				$scope.authenticate();
 			}
 			
 			$scope.newacc = function() {
 				$scope.verifyInputs();
-				if(!$scope.invalidusername && !$scope.invalidpassword){
-					console.log("Creating new customer account for " + $scope.login.username)
-				}
+				$http.post("/api/v1/users/customers", $scope.login.username + ":" + $scope.login.password).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
 			}
 			
 			$scope.guest = function() {
-				console.log("Logging in as GUEST");
 				$http.post("/api/v1/users/guests").then(
 					function(success) {
-						$scope.success = true;
-						$scope.failure = false;
 						sessionStorage.userID = success.data.username;
-						console.log(success.data);
 						window.location.replace("http://localhost:8080/home");
 					}, function(rejection) {
 						console.log("failed");
@@ -109,20 +108,15 @@ input.ng-dirty.ng-invalid-min {
 			$scope.authenticate = function() {
 				$scope.invalidusername = false;
 				$scope.invalidpassword = false;
-				/*
-				$http.post("/api/v1/inventory", $scope.login).then(
-						function(success) {
-							$scope.success = true;
-							$scope.failure = false;
-							$scope.duplicate = false;
-						}, function(rejection) {
-							$scope.success = false;
-							$scope.failure = false;
-							$scope.duplicate = true;
-							console.error("Error while adding login");
-						});*/
-			  	sessionStorage.userID = $scope.login.username;
-				window.location.replace("http://localhost:8080/home");
+				$http.get("/api/v1/users/" + $scope.login.username + ":" + $scope.login.password).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
 			}
 
 			$scope.reset();

@@ -237,22 +237,18 @@ public class APIUserTest { // begin class{}.
 
         // Test authenticating with a username that is not associated with any
         // Users in the system.
-        mvc.perform( get( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "user:pass" ) )
-                .andExpect( status().isUnauthorized() );
+        mvc.perform( get( "/api/v1/users/user:pass" ) ).andExpect( status().isUnauthorized() );
 
-        mvc.perform( get( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "user:cpass1" ) )
-                .andExpect( status().isUnauthorized() );
+        mvc.perform( get( "/api/v1/users/user:cpass1" ) ).andExpect( status().isUnauthorized() );
 
         // Test authenticating with a username that is associated with a User in
         // the system, and a password that does NOT match that of the associated
         // User.
-        mvc.perform( get( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "customer1:pass" ) )
-                .andExpect( status().isUnauthorized() );
+        mvc.perform( get( "/api/v1/users/customer1:pass" ) ).andExpect( status().isUnauthorized() );
 
         // Test authenticating with a username that is associated with a User in
         // the system, and a password that matches that of the associated User.
-        mvc.perform( get( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON ).content( "customer1:cpass1" ) )
-                .andExpect( status().isOk() );
+        mvc.perform( get( "/api/v1/users/customer1:cpass1" ) ).andExpect( status().isOk() );
 
     } // end method().
 
