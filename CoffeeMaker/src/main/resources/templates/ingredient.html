@@ -50,6 +50,9 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('addIngredientCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
 
 			$scope.reset = function() {
 				$scope.ingredient = {
@@ -97,9 +100,15 @@ input.ng-dirty.ng-invalid-min {
 
 	<div ng-app="myApp" class="generic-container ng-cloak"
 		ng-controller="addIngredientCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<span class="lead">Add Ingredient</span>
+			<div class="formcontainer">
+				<center><h1>Add Ingredient   </h1></center>
 			</div>
 
 			<div class="formcontainer">
@@ -163,7 +172,10 @@ input.ng-dirty.ng-invalid-min {
 			<div ng-show="duplicate">Ingredient already exists</div>
 		</div>
 
-		<a href="/index">Home</a>
+		<div class="margins"> </div>
+		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
 	</div>
 
 
