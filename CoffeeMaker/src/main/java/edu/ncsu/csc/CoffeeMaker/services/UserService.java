@@ -29,4 +29,15 @@ public class UserService extends Service<User, Long> {
         return userRepository;
     }
 
+    /**
+     * Find a user with the provided name
+     *
+     * @param name
+     *            Name of the user to find
+     * @return found user, null if none
+     */
+    public User findByUsername ( final String name ) {
+        return userRepository.findByUsername( name );
+    }
+
 }
