@@ -13,6 +13,9 @@
     /*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('recipesCtrl', function($scope, $http) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
 			
 			function updateRecipes() {
 				$http.get("/api/v1/recipes").then(function (response) {
@@ -64,6 +67,12 @@
 
 	<div layout:fragment="content" class="generic-container ng-cloak"
 		ng-app="myApp" ng-controller="recipesCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
 
 		<h1>Coffee Recipes</h1>
 
@@ -90,8 +99,14 @@
 			<div ng-if="submissionSuccess">Recipe deleted successfully</div>
 
 
-		</div>
-		<a href="/index">Home</a>
+			</div>
+			
+		<div> </div>
+		<div> </div>
+		<div class="margins"> </div>
+		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
 	</div>
 
 

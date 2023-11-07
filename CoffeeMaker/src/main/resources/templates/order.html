@@ -14,6 +14,10 @@
 
 		var app = angular.module('myApp', []);
 		app.controller('recipesCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
+			
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
 			});
@@ -41,6 +45,12 @@
 
 	<div layout:fragment="content" class="generic-container ng-cloak"
 		ng-app="myApp" ng-controller="recipesCtrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
 		<h1>Coffee Recipes</h1>
 		<div>
 			<ul>
@@ -50,7 +60,9 @@
 				</label></li>
 			</ul>
 			<br /> <label for="amtPaid">Enter payment</label> <input type="text"
-				ng-model="amtPaid" name="amtPaid" required="true" /> <br /> <input
+				ng-model="amtPaid" name="amtPaid" required="true" /> <br />
+				<div> </div>
+				<input
 				type="submit" ng-click="make()" value="Make Coffee"
 				class="btn btn-primary btn-sm" /> <br />
 
@@ -58,10 +70,13 @@
 				made. Your change is {{change}}.</div>
 
 			<div ng-show="submissionFailure">An error occurred: {{error}}</div>
-
-			<br /> <a href="/index">Home</a>
 		</div>
-
+		<div> </div>
+		<div> </div>
+		<div class="margins"> </div>
+		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
 	</div>
 
 </body>
