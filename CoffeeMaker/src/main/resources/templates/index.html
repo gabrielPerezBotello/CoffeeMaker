@@ -83,7 +83,17 @@ input.ng-dirty.ng-invalid-min {
 			}
 			
 			$scope.guest = function() {
-				console.log("Logging in as GUEST")
+				console.log("Logging in as GUEST");
+				$http.post("/api/v1/users/guests").then(
+					function(success) {
+						$scope.success = true;
+						$scope.failure = false;
+						sessionStorage.userID = success.data.username;
+						console.log(success.data);
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						console.log("failed");
+					});
 			}
 			
 			// add any input restrictions here
