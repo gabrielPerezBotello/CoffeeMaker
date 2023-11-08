@@ -136,8 +136,9 @@ public class APIUserController extends APIController { // begin class{}.
      *            the Users's username + ":" + the User's password
      * @return response to the request
      */
-    @GetMapping ( BASE_PATH + "/users" )
-    public ResponseEntity authenticate ( @RequestBody final String usernameColonPassword ) {
+    @GetMapping ( BASE_PATH + "/users/{usernameColonPassword}" )
+    public ResponseEntity authenticate (
+            @PathVariable ( "usernameColonPassword" ) final String usernameColonPassword ) {
 
         final String username = usernameColonPassword.split( ":" )[0];
         final String password = usernameColonPassword.split( ":" )[1];
@@ -168,7 +169,7 @@ public class APIUserController extends APIController { // begin class{}.
         // The provided username and password match the username and password of
         // the User in the system.
 
-        return new ResponseEntity( HttpStatus.OK );
+        return new ResponseEntity( user, HttpStatus.OK );
 
     }
 
