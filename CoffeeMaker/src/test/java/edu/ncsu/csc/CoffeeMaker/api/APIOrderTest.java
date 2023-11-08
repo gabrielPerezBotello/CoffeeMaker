@@ -141,18 +141,18 @@ public class APIOrderTest {
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 5 );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipe );
+        final CustomerOrder o = new CustomerOrder( "sharon", 125, recipe );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
 
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 1 Order in the CoffeeMaker" );
 
-        mvc.perform( put( "/api/v1/orders/fulfill/sharon" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( "sharon" ) ) ).andExpect( status().isOk() );
+        mvc.perform( put( "/api/v1/orders/fulfill/125" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( "125" ) ) ).andExpect( status().isOk() );
 
-        mvc.perform( put( "/api/v1/orders/pickup/sharon" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( "sharon" ) ) ).andExpect( status().isOk() );
+        mvc.perform( put( "/api/v1/orders/pickup/125" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( "125" ) ) ).andExpect( status().isOk() );
 
     }
 

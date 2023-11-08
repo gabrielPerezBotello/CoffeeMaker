@@ -127,17 +127,17 @@ public class APIOrderController extends APIController {
      * @return Success if the recipe could be deleted; an error if the recipe
      *         does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/fulfill/{name}" )
-    public ResponseEntity fulfillOrder ( @PathVariable final String name ) {
-        final CustomerOrder order = service.findByCustomerName( name );
+    @PutMapping ( BASE_PATH + "/orders/fulfill/{orderID}" )
+    public ResponseEntity fulfillOrder ( @PathVariable final Integer orderID ) {
+        final CustomerOrder order = service.findByOrderID( orderID );
         if ( null == order || !order.getStatus().equals( OrderStatus.PENDING ) ) {
-            return new ResponseEntity( errorResponse( "No recipe found for name " + name ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for order ID: " + orderID ),
+                    HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
         service.save( order );
 
-        return new ResponseEntity( successResponse( order.getCustomerName() + " was edited successfully" ),
-                HttpStatus.OK );
+        return new ResponseEntity( successResponse( order.getOrderID() + " was edited successfully" ), HttpStatus.OK );
     }
 
     /**
@@ -150,17 +150,16 @@ public class APIOrderController extends APIController {
      * @return Success if the recipe could be deleted; an error if the recipe
      *         does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/pickup/{name}" )
-    public ResponseEntity pickupOrder ( @PathVariable final String name ) {
-        final CustomerOrder order = service.findByCustomerName( name );
+    @PutMapping ( BASE_PATH + "/orders/pickup/{orderID}" )
+    public ResponseEntity pickupOrder ( @PathVariable final Integer orderID ) {
+        final CustomerOrder order = service.findByOrderID( orderID );
         if ( null == order || !order.getStatus().equals( OrderStatus.FULFILLED ) ) {
-            return new ResponseEntity( errorResponse( "No recipe found for name " + name ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No Order found for name " + orderID ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
         service.save( order );
 
-        return new ResponseEntity( successResponse( order.getCustomerName() + " was edited successfully" ),
-                HttpStatus.OK );
+        return new ResponseEntity( successResponse( order.getOrderID() + " was edited successfully" ), HttpStatus.OK );
     }
 
 }
