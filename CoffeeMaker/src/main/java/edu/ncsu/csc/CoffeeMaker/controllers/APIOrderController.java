@@ -76,8 +76,8 @@ public class APIOrderController extends APIController {
      * to create a new Recipe by automatically converting the JSON RequestBody
      * provided to a Recipe object. Invalid JSON will fail.
      *
-     * @param recipe
-     *            The valid Recipe to be saved.
+     * @param order
+     *            The valid Order to be saved.
      * @return ResponseEntity indicating success if the Recipe could be saved to
      *         the inventory, or an error if it could not be
      */
@@ -123,8 +123,7 @@ public class APIOrderController extends APIController {
      *
      * @param name
      *            The name of the Recipe to update
-     * @param recipe
-     *            The recipe to update with
+     *
      * @return Success if the recipe could be deleted; an error if the recipe
      *         does not exist
      */
@@ -148,8 +147,6 @@ public class APIOrderController extends APIController {
      *
      * @param name
      *            The name of the Recipe to update
-     * @param recipe
-     *            The recipe to update with
      * @return Success if the recipe could be deleted; an error if the recipe
      *         does not exist
      */
