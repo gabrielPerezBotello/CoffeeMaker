@@ -20,7 +20,7 @@ import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
 
 /**
  * This is the controller that holds the REST endpoints that handle CRUD
- * operations for Recipes.
+ * operations for Customer Orders.
  *
  * Spring will automatically convert all of the ResponseEntity and List results
  * to JSON
@@ -34,16 +34,17 @@ import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
 public class APIOrderController extends APIController {
 
     /**
-     * RecipeService object, to be autowired in by Spring to allow for
-     * manipulating the Recipe model
+     * CustomerOrderService object, to be autowired in by Spring to allow for
+     * manipulating the Customer Order model
      */
     @Autowired
     private CustomerOrderService service;
 
     /**
-     * REST API method to provide GET access to all recipes in the system
+     * REST API method to provide GET access to all Customer Orders in the
+     * system
      *
-     * @return JSON representation of all recipies
+     * @return JSON representation of all Customer Orders
      */
     @GetMapping ( BASE_PATH + "/orders" )
     public List<CustomerOrder> getOrders () {
@@ -51,11 +52,12 @@ public class APIOrderController extends APIController {
     }
 
     /**
-     * REST API method to provide GET access to a specific recipe, as indicated
-     * by the path variable provided (the name of the recipe desired)
+     * REST API method to provide GET access to a specific Orders, as indicated
+     * by the path variable provided (the name of the customer who ordered
+     * desired)
      *
      * @param name
-     *            recipe name
+     *            Customer Order name
      * @return response to the request
      */
     @GetMapping ( BASE_PATH + "/orders/{name}" )
@@ -72,14 +74,14 @@ public class APIOrderController extends APIController {
     }
 
     /**
-     * REST API method to provide POST access to the Recipe model. This is used
-     * to create a new Recipe by automatically converting the JSON RequestBody
-     * provided to a Recipe object. Invalid JSON will fail.
+     * REST API method to provide POST access to the Customer model. This is
+     * used to create a new Customer Order by automatically converting the JSON
+     * RequestBody provided to a Customer Order object. Invalid JSON will fail.
      *
      * @param order
      *            The valid Order to be saved.
-     * @return ResponseEntity indicating success if the Recipe could be saved to
-     *         the inventory, or an error if it could not be
+     * @return ResponseEntity indicating success if the Customer Order could be
+     *         saved to the inventory, or an error if it could not be
      */
     @PostMapping ( BASE_PATH + "/orders" )
     public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
@@ -96,17 +98,17 @@ public class APIOrderController extends APIController {
     }
 
     /**
-     * REST API method to allow deleting a Recipe from the CoffeeMaker's
+     * REST API method to allow deleting a Customer Order from the CoffeeMaker's
      * Inventory, by making a DELETE request to the API endpoint and indicating
-     * the recipe to delete (as a path variable)
+     * the Customer Order to delete (as a path variable)
      *
      * @param name
-     *            The name of the Recipe to delete
-     * @return Success if the recipe could be deleted; an error if the recipe
-     *         does not exist
+     *            The name of the Customer Order to delete
+     * @return Success if the Customer Order could be deleted; an error if the
+     *         Customer Order does not exist
      */
     @DeleteMapping ( BASE_PATH + "/orders/{name}" )
-    public ResponseEntity deleteRecipe ( @PathVariable final String name ) {
+    public ResponseEntity deleteCustomerOrder ( @PathVariable final String name ) {
         final CustomerOrder order = service.findByCustomerName( name );
         if ( null == order ) {
             return new ResponseEntity( errorResponse( "No order found for name " + name ), HttpStatus.NOT_FOUND );
@@ -117,15 +119,15 @@ public class APIOrderController extends APIController {
     }
 
     /**
-     * REST API method to allow editing a Recipe from the CoffeeMaker's
+     * REST API method to allow editing a Customer Order from the CoffeeMaker's
      * Inventory, by making a PUT request to the API endpoint and indicating the
-     * recipe to update (as a path variable)
+     * Customer Order to update (as a path variable)
      *
-     * @param name
-     *            The name of the Recipe to update
+     * @param orderID
+     *            The orderID of the Customer Order to update
      *
-     * @return Success if the recipe could be deleted; an error if the recipe
-     *         does not exist
+     * @return Success if the Customer Order could be deleted; an error if the
+     *         Customer Order does not exist
      */
     @PutMapping ( BASE_PATH + "/orders/fulfill/{orderID}" )
     public ResponseEntity fulfillOrder ( @PathVariable final Integer orderID ) {
@@ -141,14 +143,14 @@ public class APIOrderController extends APIController {
     }
 
     /**
-     * REST API method to allow editing a Recipe from the CoffeeMaker's
+     * REST API method to allow editing a Customer Order from the CoffeeMaker's
      * Inventory, by making a PUT request to the API endpoint and indicating the
-     * recipe to update (as a path variable)
+     * Customer Order to update (as a path variable)
      *
-     * @param name
-     *            The name of the Recipe to update
-     * @return Success if the recipe could be deleted; an error if the recipe
-     *         does not exist
+     * @param orderID
+     *            The orderID of the Customer Order to update
+     * @return Success if the Customer Order could be deleted; an error if the
+     *         Customer Order does not exist
      */
     @PutMapping ( BASE_PATH + "/orders/pickup/{orderID}" )
     public ResponseEntity pickupOrder ( @PathVariable final Integer orderID ) {
