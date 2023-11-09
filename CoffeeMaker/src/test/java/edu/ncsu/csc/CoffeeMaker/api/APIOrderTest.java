@@ -96,8 +96,8 @@ public class APIOrderTest {
 
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 1 Order in the CoffeeMaker" );
 
-        mvc.perform( delete( "/api/v1/orders/sharon" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( "sharon" ) ) ).andExpect( status().isOk() );
+        mvc.perform( delete( "/api/v1/orders/1" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( 1 ) ) ).andExpect( status().isOk() );
 
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Orders in the CoffeeMaker" );
     }
