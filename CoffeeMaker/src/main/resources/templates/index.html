@@ -1,21 +1,214 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Welcome to the CSC326 CoffeeMaker</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Login</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: #FF7276;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+.submit {
+	width: 220px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -110px; /*half the size of width*/
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
-	<h1>Coffee Maker</h1>
-	<h2>Available Options</h2>
-	<ul>
-		<li><a href="inventory.html">Update Inventory</a></li>
-		<li><a href="recipe.html">Add a Recipe</a></li>
-		<li><a href="editrecipe.html">Edit Recipe</a></li>
-		<li><a href="deleterecipe.html">Delete Recipe</a></li>
-		<li><a href="makecoffee.html">Make Coffee</a></li>
-		<li><a href="ingredient.html">Add Ingredient</a></li>
-	</ul>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('loginCtrl', function($scope, $http, $q) {
+			
+			// If statement framework Code was sourced from: https://www.w3schools.com/html/html5_webstorage.asp
+			if (typeof(Storage) !== "undefined") {
+			  // Code for localStorage/sessionStorage.
+			  // console.log("browser does support storage");
+			  
+			  
+////////////////////////////// THIS IS WHERE THE USER ID IS DEFINED ////////////////////////////////
+			  sessionStorage.userID = "";
+			  sessionStorage.userType = "Guest";
+			} else {
+			  console.log("browser does not support storage");
+			}
+
+			$scope.reset = function() {
+				$scope.invalidpassword = false;
+				$scope.invalidusername = false;
+				$scope.login = {
+					username : '',
+					password : ''
+				};
+				if (undefined != $scope.loginForm) {
+					$scope.loginForm.$setPristine(); // reset Form
+				}
+			}
+			
+			// this is called to clear any error messages on screen
+			$scope.clearerror = function() {
+				$scope.invalidpassword = false;
+				$scope.invalidusername = false;
+			}
+
+			$scope.submit = function() {
+				$scope.verifyInputs();
+				$scope.authenticate();
+			}
+			
+			$scope.newacc = function() {
+				$scope.verifyInputs();
+				$http.post("/api/v1/users/customers", $scope.login.username + ":" + $scope.login.password).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
+			}
+			
+			$scope.newstaffacc = function() {
+				$scope.verifyInputs();
+				$http.post("/api/v1/users", $scope.login.username).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
+			}
+			
+			$scope.guest = function() {
+				$http.post("/api/v1/users/guests").then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						console.log("failed");
+					});
+			}
+			
+			// add any input restrictions here
+			$scope.verifyInputs = function() {
+				if($scope.login.username.includes(":") || $scope.login.username.includes(" ") || $scope.login.username.toLowerCase().includes("guest")){
+					$scope.invalidusername = true;
+				}
+				if($scope.login.password.includes(":") || $scope.login.password.includes(" ")){
+					$scope.invalidpassword = true;
+				}
+			}
+
+			$scope.authenticate = function() {
+				$scope.invalidusername = false;
+				$scope.invalidpassword = false;
+				$http.get("/api/v1/users/" + $scope.login.username + ":" + $scope.login.password).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
+			}
+
+			$scope.reset();
+
+		});
+		/*]]>*/
+	</script>
+
+	<div ng-app="myApp" class="generic-container ng-cloak"
+		ng-controller="loginCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
+		<div class="row">
+			<div class="form-group col-md-12">
+				<h1><center>Coffeemaker Login Page   </center></h1>
+			</div>
+
+			<div class="formcontainer">
+				<form ng-submit="submit()" name="loginForm"
+					class="form-horizontal">
+
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">        Username</label>
+							<div class="col-md-7">
+								<input type="text" ng-click="clearerror()" ng-model="login.username" name="username"
+									class="username form-control input-sm"
+									placeholder="Enter valid username" required="0" />
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">        Password</label>
+							<div class="col-md-7">
+								<input type="password" ng-click="clearerror()" ng-model="login.password" name="password"
+									class="password form-control input-sm"
+									placeholder="Enter valid password" required="0" />
+							</div>
+						</div>
+					</div>
+
+					<!-- There are some random space characters here in order to align stuff so 
+					don't go messing around with the indentation too much -->
+					<div class="row">
+						<div class="form-actions float"> <!-- Used to align the submit and reset buttons. -->
+							<div class="submit">
+								<input type="submit" value="Login"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid" /> 
+								<button type="button" ng-click="newacc()"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid">Customer Account</button>
+								</div>
+							<div> </div>
+							<div class="submit">
+								   <button type="button" ng-click="guest()"
+									class="btn btn-primary btn-sm">
+									Guest</button> 
+									<button type="button" ng-click="newstaffacc()"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid">Staff Account</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div ng-show="invalidusername"><center>Invalid Username           </center></div>
+			<div ng-show="invalidpassword"><center>Invalid Password           </center></div>
+			<div> </div>
+			<div class="margins"> </div>
+			<div class="margins"> </div>
+			<div class="margins"> </div>
+		</div>
+	</div>
+
+
+
 </body>
 </html>

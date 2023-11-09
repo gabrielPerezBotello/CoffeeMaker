@@ -30,6 +30,10 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('inventoryCtrl', function($scope, $http) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
+			
 			$scope.inventoryOriginal
 
 			$scope.getInventory = function() {
@@ -114,20 +118,25 @@ input.ng-dirty.ng-invalid-min {
 
 	<div class="generic-container ng-cloak" ng-app="myApp"
 		ng-controller="inventoryCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<span class="lead">View Inventory</span>
-			</div>
+			<div class="formcontainer">
+				<h3>View Inventory</h1>
 
-			<ul style="list-style: none;" >
-				<li ng-repeat="ingredient in inventoryOriginal.ingredients"> 
-					{{ingredient.name}}: {{ingredient.amount}}
-				</li>
-			</ul>				
-
-			<div class="panel-heading">
-				<span class="lead">Update Inventory Form </span>
+				<ul class="formcontainer" style="list-style: none;" >
+					<li ng-repeat="ingredient in inventoryOriginal.ingredients"> 
+						{{ingredient.name}}: {{ingredient.amount}}
+					</li>
+				</ul>		
 			</div>
+		
+			<div class="formcontainer">
+				<h3>Update Inventory Form</h2>
 			<div class="formcontainer">
 				<form ng-submit="submit()" name="addInventoryForm"
 					class="form-horizontal">
@@ -157,12 +166,16 @@ input.ng-dirty.ng-invalid-min {
 						</div>
 					</div>
 				</form>
+				</div>
 			</div>
 			<div ng-show="success">Inventory Successfully Updated</div>
 			<div ng-show="failure">Error while updating inventory.</div>
 		</div>
 
-		<a href="/index">Home</a>
+		<div class="margins"> </div>
+		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
 	</div>
 
 
