@@ -85,6 +85,19 @@ input.ng-dirty.ng-invalid-min {
 					});
 			}
 			
+			$scope.newstaffacc = function() {
+				$scope.verifyInputs();
+				$http.post("/api/v1/users", $scope.login.username).then(
+					function(success) {
+						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
+						window.location.replace("http://localhost:8080/home");
+					}, function(rejection) {
+						$scope.invalidusername = true;
+						console.log("failed");
+					});
+			}
+			
 			$scope.guest = function() {
 				$http.post("/api/v1/users/guests").then(
 					function(success) {
@@ -171,13 +184,16 @@ input.ng-dirty.ng-invalid-min {
 									ng-disabled="loginForm.$invalid" /> 
 								<button type="button" ng-click="newacc()"
 									class="btn btn-primary btn-sm"
-									ng-disabled="loginForm.$invalid">Create New Account</button>
+									ng-disabled="loginForm.$invalid">Customer Account</button>
 								</div>
 							<div> </div>
 							<div class="submit">
 								   <button type="button" ng-click="guest()"
 									class="btn btn-primary btn-sm">
-									Continue as Guest</button>
+									Guest</button> 
+									<button type="button" ng-click="newstaffacc()"
+									class="btn btn-primary btn-sm"
+									ng-disabled="loginForm.$invalid">Staff Account</button>
 							</div>
 						</div>
 					</div>
