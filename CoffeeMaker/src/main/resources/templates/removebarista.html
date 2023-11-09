@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Remove Barista</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: #EFDECD;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+.lead {
+	width: 160px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -80px; /*half the size of width*/
+}
+
+.submit {
+	width: 220px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -110px; /*half the size of width*/
+}
+
+.reset {
+	width: 220px;
+ 	position: relative;
+ 	left: 55%;
+ 	margin-left: -110px; /*half the size of width*/
+ 	bottom: 29px;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('removeBaristaCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
+
+			$scope.reset = function() {
+				$scope.barista = {
+					name : '',
+					amount : ''
+				};
+				if (undefined != $scope.removeBaristaForm) {
+					$scope.removeBaristaForm.$setPristine(); // reset Form
+				}
+			}
+
+			$scope.submit = function() {
+				$scope.removeBarista();
+
+				$scope.reset();
+			}
+
+			$scope.removeBarista = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				$scope.duplicate = false;
+				// console.log($scope.barista);
+				$scope.tempName = $scope.barista.name;
+
+				$http.delete("/api/v1/users/" + $scope.barista.name).then(
+						function(success) {
+							$scope.success = true;
+							$scope.failure = false;
+							$scope.duplicate = false;
+							// console.log("here");
+						}, function(rejection) {
+							$scope.success = false;
+							$scope.failure = false;
+							$scope.duplicate = true;
+							console.error("Error while removing barista");
+						});
+			}
+
+			$scope.reset();
+
+		});
+		/*]]>*/
+	</script>
+
+
+
+	<div ng-app="myApp" class="generic-container ng-cloak"
+		ng-controller="removeBaristaCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
+		<div class="panel panel-default">
+			<div class="formcontainer">
+				<center><h1>Remove Barista   </h1></center>
+			</div>
+
+			<div class="formcontainer">
+				<form ng-submit="submit()" name="removeBaristaForm"
+					class="form-horizontal">
+
+					<div class="row">
+						<div class="form-group col-md-12">
+							<label class="col-md-2 control-lable" for="file">Username</label>
+							<div class="col-md-7">
+								<input type="text" ng-model="barista.name" name="name"
+									class="name form-control input-sm"
+									placeholder="Enter barista username" required="0" />
+								<div class="has-error" ng-show="removeBaristaForm.$dirty">
+									<span ng-show="removeBaristaForm.name.$error.required">This
+										is a required field.</span> <span
+										ng-show="removeBaristaForm.name.$invalid">This field is
+										invalid.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="form-actions float"> <!-- Used to align the submit and reset buttons. -->
+							<div class="submit">
+								<input type="submit" value="Remove Barista"
+									class="btn btn-primary btn-sm"
+									ng-disabled="removeBaristaForm.$invalid" /> 
+									
+								<button type="button" ng-click="reset()"
+									class="btn btn-warning btn-sm"
+									ng-disabled="removeBaristaForm.$pristine">Reset Form
+								</button>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div ng-show="success">Removed Barista: {{tempName}}</div>
+				<div ng-show="failure">Error while removing barista</div>
+				<div ng-show="duplicate">Barista already exists</div>
+			</div>
+		</div>
+
+		<div class="margins"> </div>
+		<div class="homeLink"> 
+			<button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+		</div>		
+		<div class="margins"> </div>
+	</div>
+
+
+
+</body>
+</html>
