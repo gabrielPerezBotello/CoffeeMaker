@@ -399,6 +399,22 @@ public class InventoryTest {
     }
 
     /**
+     * Tests the ID methods and fields
+     */
+    @Test
+    @Transactional
+    public void testIDs () {
+        final Inventory ivt = inventoryService.getInventory();
+
+        Assertions.assertEquals( 0, ivt.getIncrNextGuestID() );
+        Assertions.assertEquals( 0, ivt.getIncrNextOrderID() );
+
+        Assertions.assertEquals( 1, ivt.getIncrNextGuestID() );
+        Assertions.assertEquals( 1, ivt.getIncrNextOrderID() );
+
+    }
+
+    /**
      * Tests the toString() method.
      */
     @Test

@@ -50,6 +50,9 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('addRecipeCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
 			
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
@@ -155,13 +158,19 @@ input.ng-dirty.ng-invalid-min {
 
 	<div ng-app="myApp" class="generic-container ng-cloak"
 		ng-controller="addRecipeCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
 		<div class="panel panel-default">
-			<div class="panel-heading">
-				<span class="lead">Edit Recipe</span>
+			<div class="formcontainer">
+				<center><h1>Edit Recipe   </h1></center>
 			</div>
 			
 			<div class="formcontainer">
-			<h5>Select Recipe to Edit</h5>
+			<h5><b> Recipe to Edit</b> </h5>
 			<ul>
 				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
 						<input type="radio" ng-model="$parent.name" name="name"
@@ -178,13 +187,6 @@ input.ng-dirty.ng-invalid-min {
 								<input type="number" ng-model="recipe.price" name="price"
 									class="price form-control input-sm"
 									placeholder="Enter recipe price" required="0" min="0"/>
-								<div class="has-error" ng-show="addRecipeForm.$dirty">
-									<span ng-show="addRecipeForm.price.$error.required">This
-										is a required field</span> <span
-										ng-show="addRecipeForm.price.$error.min">Minimum amount
-										is 0</span> <span ng-show="addRecipeForm.price.$invalid">This
-										field is invalid </span>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -227,7 +229,10 @@ input.ng-dirty.ng-invalid-min {
 			<div ng-show="empty">Recipe must have ingredients</div>
 		</div>
 
-		<a href="/index">Home</a>
+		<div class="margins"> </div>
+		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
+		<div class="margins"> </div>
+		<div class="margins"> </div>
 	</div>
 
 
