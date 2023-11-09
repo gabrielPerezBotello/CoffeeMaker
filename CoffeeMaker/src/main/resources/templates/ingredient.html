@@ -8,7 +8,7 @@ input.ng-valid {
 }
 
 input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
-	background-color: red;
+	background-color: #EFDECD;
 }
 
 input.ng-dirty.ng-invalid-min {
@@ -156,10 +156,8 @@ input.ng-dirty.ng-invalid-min {
 							<div class="submit">
 								<input type="submit" value="Add Ingredient"
 									class="btn btn-primary btn-sm"
-									ng-disabled="addIngredientForm.$invalid" />
-								</div>
-							<div class="reset">
-								<button type="button" ng-click="reset()"
+									ng-disabled="addIngredientForm.$invalid" /> 
+									<button type="button" ng-click="reset()"
 									class="btn btn-warning btn-sm"
 									ng-disabled="addIngredientForm.$pristine">Reset Form</button>
 								</div>
@@ -173,8 +171,9 @@ input.ng-dirty.ng-invalid-min {
 		</div>
 
 		<div class="margins"> </div>
-		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
-		<div class="margins"> </div>
+		<div class="homeLink"> 
+            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+        </div> 	
 		<div class="margins"> </div>
 	</div>
 
