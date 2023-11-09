@@ -33,11 +33,11 @@
 			$scope.order = false
 			$scope.pickup = false
 				
-			if($scope.user != "Manager") {
+			if($scope.user != "MANAGER") {
 				$scope.add = false
 				$scope.remove = false
 			}
-			if($scope.user != "Staff" && $scope.user != "Manager") {
+			if($scope.user != "BARISTA" && $scope.user != "MANAGER") {
 				$scope.inv = false
 				$scope.recipe = false
 				$scope.edit = false
