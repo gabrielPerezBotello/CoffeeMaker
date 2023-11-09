@@ -85,11 +85,6 @@ public class APIOrderController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/orders" )
     public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
-        if ( null != service.findByCustomerName( order.getCustomerName() ) ) {
-            return new ResponseEntity(
-                    errorResponse( "Order with the name " + order.getCustomerName() + " already exists" ),
-                    HttpStatus.CONFLICT );
-        }
 
         service.save( order );
         return new ResponseEntity( successResponse( order.getCustomerName() + " successfully created" ),
@@ -102,20 +97,21 @@ public class APIOrderController extends APIController {
      * Inventory, by making a DELETE request to the API endpoint and indicating
      * the Customer Order to delete (as a path variable)
      *
-     * @param name
-     *            The name of the Customer Order to delete
+     * @param orderID
+     *            The orderID of the Customer Order to delete
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @DeleteMapping ( BASE_PATH + "/orders/{name}" )
-    public ResponseEntity deleteCustomerOrder ( @PathVariable final String name ) {
-        final CustomerOrder order = service.findByCustomerName( name );
+    @DeleteMapping ( BASE_PATH + "/orders/{orderID}" )
+    public ResponseEntity deleteCustomerOrder ( @PathVariable final Integer orderID ) {
+        final CustomerOrder order = service.findByOrderID( orderID );
         if ( null == order ) {
-            return new ResponseEntity( errorResponse( "No order found for name " + name ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for orderID: " + orderID ),
+                    HttpStatus.NOT_FOUND );
         }
         service.delete( order );
 
-        return new ResponseEntity( successResponse( name + " was deleted successfully" ), HttpStatus.OK );
+        return new ResponseEntity( successResponse( orderID + " was deleted successfully" ), HttpStatus.OK );
     }
 
     /**
