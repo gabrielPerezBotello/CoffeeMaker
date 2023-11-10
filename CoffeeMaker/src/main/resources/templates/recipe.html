@@ -50,6 +50,8 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('addRecipeCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+
 
 			$scope.reset = function() {
 				$scope.recipe = {
