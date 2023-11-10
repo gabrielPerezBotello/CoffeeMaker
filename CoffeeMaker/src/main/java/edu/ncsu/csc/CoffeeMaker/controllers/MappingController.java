@@ -132,4 +132,30 @@ public class MappingController {
     public String orderPage ( final Model model ) {
         return "order";
     }
+
+    /**
+     * On a GET request to /addbarista, the addBaristaController will return
+     * /src/main/resources/templates/addbarista.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/addbarista", "/addbarista.html" } )
+    public String addBaristaPage ( final Model model ) {
+        return "addBarista";
+    }
+
+    /**
+     * On a GET request to /removebarista, the removeBaristaController will
+     * return /src/main/resources/templates/removebarista.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/removebarista", "/removebarista.html" } )
+    public String removeBaristaPage ( final Model model ) {
+        return "removeBarista";
+    }
 }
