@@ -81,9 +81,9 @@ public class OrderTest {
 
         final List<CustomerOrder> orders = service.findAll();
         Assertions.assertEquals( 2, orders.size(),
-                "Creating two recipes should result in two recipes in the database" );
+                "Creating two CustomerOrder objects should result in two CustomerOrder objects in the database" );
 
-        Assertions.assertEquals( o1, orders.get( 0 ), "The retrieved recipe should match the created one" );
+        Assertions.assertEquals( o1, orders.get( 0 ), "The retrieved CustomerOrder should match the created one" );
 
         assertEquals( r1.getName(), o1.getRecipe().getName() );
         o1.advanceStatus();
@@ -106,6 +106,44 @@ public class OrderTest {
 
         assertTrue( service.findByCustomerName( "Sharon" ).equals( o1 ) );
         assertTrue( service.findByOrderID( 1 ).equals( o1 ) );
+
+    }
+
+    /**
+     * Tests invalid orders
+     */
+    @Test
+    @Transactional
+    public void testInvalidOrder () {
+        // Make a recipe
+        final Recipe r1 = new Recipe();
+        r1.setName( "Black Coffee" );
+        r1.setPrice( 1 );
+        // Create Ingredients
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        // Add Ingredients to Recipe
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
+
+        // Saving null order
+        final CustomerOrder o1 = null;
+        service.save( o1 );
+
+        // Saving invalid orders
+        final CustomerOrder o2 = new CustomerOrder( null, 1, r1 );
+        final CustomerOrder o3 = new CustomerOrder( "Bobert", null, r1 );
+        final CustomerOrder o4 = new CustomerOrder( "Bobert", 1, null );
+        service.save( o2 );
+        service.save( o3 );
+        service.save( o4 );
+
+        final List<CustomerOrder> orders = service.findAll();
+        Assertions.assertEquals( 0, orders.size(), "No customer order should have been added" );
 
     }
 }

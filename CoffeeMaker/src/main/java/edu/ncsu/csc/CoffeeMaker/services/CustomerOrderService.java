@@ -59,4 +59,21 @@ public class CustomerOrderService extends Service<CustomerOrder, Long> {
     public List<CustomerOrder> getOrders () {
         return customerOrderRepository.findAll();
     }
+
+    /**
+     * Saves the provided CustomerOrder object into the database if the name,
+     * id, and recipe fields are not null
+     *
+     * Otherwise, does not save the CustomerOrder object into the database.
+     *
+     * @param o
+     *            the candidate CustomerOrder for saving to the database.
+     */
+    @Override
+    public void save ( final CustomerOrder o ) { // begin save().
+        if ( o == null || o.getCustomerName() == null || o.getOrderID() == null || o.getRecipe() == null ) {
+            return;
+        }
+        super.save( o );
+    }
 }
