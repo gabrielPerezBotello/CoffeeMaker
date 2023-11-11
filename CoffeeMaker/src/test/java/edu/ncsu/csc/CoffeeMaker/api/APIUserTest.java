@@ -81,6 +81,8 @@ public class APIUserTest { // begin class{}.
 
         Assertions.assertTrue( result.contains( "\"username\":\"barista1\"" ) );
 
+        Assertions.assertFalse( result.contains( "password" ) );
+
         Assertions.assertTrue( result.contains( "\"role\":\"BARISTA\"" ) );
 
         Assertions.assertEquals( 1, (int) service.count() );
@@ -180,6 +182,7 @@ public class APIUserTest { // begin class{}.
         Assertions.assertFalse( result2.contains( "\"role\":\"MANAGER\"" ) );
 
         Assertions.assertTrue( result2.contains( "\"role\":\"BARISTA\"" ) );
+        Assertions.assertTrue( result2.contains( "\"password\":\"\"" ) );
         Assertions.assertTrue( result2.contains( "\"username\":\"barista1" ) );
         Assertions.assertTrue( result2.contains( "\"username\":\"barista2" ) );
         Assertions.assertTrue( result2.contains( "\"username\":\"barista3" ) );
@@ -210,6 +213,7 @@ public class APIUserTest { // begin class{}.
         Assertions.assertFalse( result3.contains( "\"password\":\"mpass1\"" ) );
 
         Assertions.assertTrue( result3.contains( "\"role\":\"BARISTA\"" ) );
+        Assertions.assertTrue( result3.contains( "\"password\":\"\"" ) );
         Assertions.assertTrue( result3.contains( "\"username\":\"barista1" ) );
         Assertions.assertTrue( result3.contains( "\"username\":\"barista2" ) );
         Assertions.assertTrue( result3.contains( "\"username\":\"barista3" ) );
@@ -237,18 +241,26 @@ public class APIUserTest { // begin class{}.
 
         // Test authenticating with a username that is not associated with any
         // Users in the system.
-        mvc.perform( get( "/api/v1/users/user:pass" ) ).andExpect( status().isUnauthorized() );
+        mvc.perform( get( "/api/v1/users/user:pass" ).contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isUnauthorized() );
 
-        mvc.perform( get( "/api/v1/users/user:cpass1" ) ).andExpect( status().isUnauthorized() );
-
+        mvc.perform( get( "/api/v1/users/user:cpass1" ).contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isUnauthorized() );
         // Test authenticating with a username that is associated with a User in
         // the system, and a password that does NOT match that of the associated
         // User.
-        mvc.perform( get( "/api/v1/users/customer1:pass" ) ).andExpect( status().isUnauthorized() );
+        mvc.perform( get( "/api/v1/users/customer1:pass" ).contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isUnauthorized() );
 
         // Test authenticating with a username that is associated with a User in
         // the system, and a password that matches that of the associated User.
-        mvc.perform( get( "/api/v1/users/customer1:cpass1" ) ).andExpect( status().isOk() );
+        final String result = mvc
+                .perform( get( "/api/v1/users/customer1:cpass1" ).contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        Assertions.assertTrue( result.contains( "\"username\":\"customer1\",\"role\":\"CUSTOMER\"" ) );
+
+        Assertions.assertFalse( result.contains( "password" ) );
 
     } // end method().
 
@@ -269,8 +281,9 @@ public class APIUserTest { // begin class{}.
                         .content( "customer1:pass1" ) )
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
-        Assertions.assertTrue(
-                result.contains( "\"username\":\"customer1\",\"password\":\"pass1\",\"role\":\"CUSTOMER\"" ) );
+        Assertions.assertTrue( result.contains( "\"username\":\"customer1\",\"role\":\"CUSTOMER\"" ) );
+
+        Assertions.assertFalse( result.contains( "password" ) );
 
         Assertions.assertEquals( 1, (int) service.count() );
 
@@ -320,7 +333,8 @@ public class APIUserTest { // begin class{}.
         final String result = mvc.perform( post( "/api/v1/users/guests" ).contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
-        Assertions.assertTrue( result.contains( "{\"username\":\"guest0\",\"role\":\"GUEST\"}" ) );
+        Assertions.assertTrue( result.contains( "{\"username\":\"guest0\",\"role\":\"CUSTOMER\"}" ) );
+        Assertions.assertFalse( result.contains( "password" ) );
 
         Assertions.assertEquals( 1, (int) service.count() );
 

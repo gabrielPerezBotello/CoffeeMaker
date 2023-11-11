@@ -39,7 +39,7 @@ public class User extends DomainObject {
         super();
         this.username = "";
         this.password = "";
-        this.role = null;
+        this.role = UserRole.CUSTOMER;
     }
 
     /**

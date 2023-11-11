@@ -74,7 +74,8 @@ public class APIUserController extends APIController { // begin class{}.
 
         service.save( newBarista );
 
-        return new ResponseEntity( newBarista, HttpStatus.OK );
+        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"" + "BARISTA" + "\"}",
+                HttpStatus.OK );
 
     } // end method().
 
@@ -122,6 +123,8 @@ public class APIUserController extends APIController { // begin class{}.
 
             } // end if.
 
+            user.setPassword( "" );
+
         } // end for.
 
         return allUsers;
@@ -129,7 +132,7 @@ public class APIUserController extends APIController { // begin class{}.
 
     /**
      * REST API method to provide GET access to the specific user with the
-     * provided username and password (in request body) if existing. This is
+     * provided username and password (as a path variable) if existing. This is
      * used to authenticate an attempted login with the provided credentials.
      *
      * @param usernameColonPassword
@@ -137,8 +140,7 @@ public class APIUserController extends APIController { // begin class{}.
      * @return response to the request
      */
     @GetMapping ( BASE_PATH + "/users/{usernameColonPassword}" )
-    public ResponseEntity authenticate (
-            @PathVariable ( "usernameColonPassword" ) final String usernameColonPassword ) {
+    public ResponseEntity authenticate ( @PathVariable final String usernameColonPassword ) {
 
         final String username = usernameColonPassword.split( ":" )[0];
         final String password = usernameColonPassword.split( ":" )[1];
@@ -169,7 +171,8 @@ public class APIUserController extends APIController { // begin class{}.
         // The provided username and password match the username and password of
         // the User in the system.
 
-        return new ResponseEntity( user, HttpStatus.OK );
+        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"" + user.getRole() + "\"}",
+                HttpStatus.OK );
 
     }
 
@@ -199,7 +202,7 @@ public class APIUserController extends APIController { // begin class{}.
 
         service.save( newCustomer );
 
-        return new ResponseEntity( newCustomer, HttpStatus.OK );
+        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"CUSTOMER\"}", HttpStatus.OK );
 
     }
 
@@ -230,7 +233,7 @@ public class APIUserController extends APIController { // begin class{}.
         service.save( newGuest );
         ivtService.save( ivt );
 
-        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"GUEST\"}", HttpStatus.OK );
+        return new ResponseEntity( "{\"username\":\"" + username + "\",\"role\":\"CUSTOMER\"}", HttpStatus.OK );
 
     }
 
