@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Add Ingredient</title>
+<title>Add Barista</title>
 <style>
 input.ng-valid {
 	background-color: lightgreen;
@@ -49,35 +49,35 @@ input.ng-dirty.ng-invalid-min {
 	<script>
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
-		app.controller('addIngredientCtrl', function($scope, $http, $q) {
+		app.controller('addBaristaCtrl', function($scope, $http, $q) {
 			document.getElementById("result").innerHTML = sessionStorage.userID;
 			
 			$scope.user = sessionStorage.userType;
 
 			$scope.reset = function() {
-				$scope.ingredient = {
+				$scope.barista = {
 					name : '',
 					amount : ''
 				};
-				if (undefined != $scope.addIngredientForm) {
-					$scope.addIngredientForm.$setPristine(); // reset Form
+				if (undefined != $scope.addBaristaForm) {
+					$scope.addBaristaForm.$setPristine(); // reset Form
 				}
 			}
 
 			$scope.submit = function() {
-				$scope.addIngredient();
+				$scope.addBarista();
 
 				$scope.reset();
 			}
 
-			$scope.addIngredient = function() {
+			$scope.addBarista = function() {
 				$scope.success = false;
 				$scope.failure = false;
 				$scope.duplicate = false;
-				// console.log($scope.ingredient);
-				$scope.tempName = $scope.ingredient.name;
+				// console.log($scope.barista);
+				$scope.tempName = $scope.barista.name;
 
-				$http.post("/api/v1/inventory", $scope.ingredient).then(
+				$http.post("/api/v1/users", $scope.barista.name).then(
 						function(success) {
 							$scope.success = true;
 							$scope.failure = false;
@@ -86,7 +86,7 @@ input.ng-dirty.ng-invalid-min {
 							$scope.success = false;
 							$scope.failure = false;
 							$scope.duplicate = true;
-							console.error("Error while adding ingredient");
+							console.error("Error while adding barista");
 						});
 			}
 
@@ -99,7 +99,7 @@ input.ng-dirty.ng-invalid-min {
 
 
 	<div ng-app="myApp" class="generic-container ng-cloak"
-		ng-controller="addIngredientCtrl as ctrl">
+		ng-controller="addBaristaCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 
 			<b id = "result" class="userHeader"></b>
@@ -108,43 +108,25 @@ input.ng-dirty.ng-invalid-min {
 		<div class="margins"> </div>
 		<div class="panel panel-default">
 			<div class="formcontainer">
-				<center><h1>Add Ingredient   </h1></center>
+				<center><h1>Add Barista   </h1></center>
 			</div>
 
 			<div class="formcontainer">
-				<form ng-submit="submit()" name="addIngredientForm"
+				<form ng-submit="submit()" name="addBaristaForm"
 					class="form-horizontal">
 
 					<div class="row">
 						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Name</label>
+							<label class="col-md-2 control-lable" for="file">Username</label>
 							<div class="col-md-7">
-								<input type="text" ng-model="ingredient.name" name="name"
+								<input type="text" ng-model="barista.name" name="name"
 									class="name form-control input-sm"
-									placeholder="Enter ingredient name" required="0" />
-								<div class="has-error" ng-show="addIngredientForm.$dirty">
-									<span ng-show="addIngredientForm.name.$error.required">This
+									placeholder="Enter barista username" required="0" />
+								<div class="has-error" ng-show="addBaristaForm.$dirty">
+									<span ng-show="addBaristaForm.name.$error.required">This
 										is a required field.</span> <span
-										ng-show="addIngredientForm.name.$invalid">This field is
+										ng-show="addBaristaForm.name.$invalid">This field is
 										invalid.</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label class="col-md-2 control-lable" for="file">Amount</label>
-							<div class="col-md-7">
-								<input type="number" ng-model="ingredient.amount" name="amount"
-									class="amount form-control input-sm"
-									placeholder="Enter ingredient amount" required="0" min="0"/>
-								<div class="has-error" ng-show="addIngredientForm.$dirty">
-									<span ng-show="addIngredientForm.amount.$error.required">This
-										is a required field</span> <span
-										ng-show="addIngredientForm.amount.$error.min">Invalid 
-										Amount</span> <span ng-show="addIngredientForm.amount.$invalid">This
-										field is invalid </span>
 								</div>
 							</div>
 						</div>
@@ -154,26 +136,28 @@ input.ng-dirty.ng-invalid-min {
 					<div class="row">
 						<div class="form-actions float"> <!-- Used to align the submit and reset buttons. -->
 							<div class="submit">
-								<input type="submit" value="Add Ingredient"
+								<input type="submit" value="Add Barista"
 									class="btn btn-primary btn-sm"
-									ng-disabled="addIngredientForm.$invalid" /> 
-									<button type="button" ng-click="reset()"
+									ng-disabled="addBaristaForm.$invalid" /> 
+									
+								<button type="button" ng-click="reset()"
 									class="btn btn-warning btn-sm"
-									ng-disabled="addIngredientForm.$pristine">Reset Form</button>
-								</div>
+									ng-disabled="addBaristaForm.$pristine">Reset Form
+								</button>
+							</div>
 						</div>
 					</div>
 				</form>
+				<div ng-show="success">New Barista: {{tempName}}</div>
+				<div ng-show="failure">Error while adding barista</div>
+				<div ng-show="duplicate">Barista already exists</div>
 			</div>
-			<div ng-show="success">{{tempName}} Added</div>
-			<div ng-show="failure">Error while adding ingredient</div>
-			<div ng-show="duplicate">Ingredient already exists</div>
 		</div>
 
 		<div class="margins"> </div>
 		<div class="homeLink"> 
-            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
-        </div> 	
+			<button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+		</div>		
 		<div class="margins"> </div>
 	</div>
 

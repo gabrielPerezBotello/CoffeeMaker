@@ -8,7 +8,7 @@ input.ng-valid {
 }
 
 input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
-	background-color: #FF7276;
+	background-color: #EFDECD ;
 }
 
 input.ng-dirty.ng-invalid-min {
@@ -50,8 +50,7 @@ input.ng-dirty.ng-invalid-min {
 			}
 
 			$scope.reset = function() {
-				$scope.invalidpassword = false;
-				$scope.invalidusername = false;
+				$scope.invalid = false;
 				$scope.login = {
 					username : '',
 					password : ''
@@ -63,8 +62,7 @@ input.ng-dirty.ng-invalid-min {
 			
 			// this is called to clear any error messages on screen
 			$scope.clearerror = function() {
-				$scope.invalidpassword = false;
-				$scope.invalidusername = false;
+				$scope.invalid = false;
 			}
 
 			$scope.submit = function() {
@@ -74,34 +72,24 @@ input.ng-dirty.ng-invalid-min {
 			
 			$scope.newacc = function() {
 				$scope.verifyInputs();
-				$http.post("/api/v1/users/customers", $scope.login.username + ":" + $scope.login.password).then(
-					function(success) {
-						sessionStorage.userID = success.data.username;
-						sessionStorage.userType = success.data.role;
-						window.location.replace("http://localhost:8080/home");
-					}, function(rejection) {
-						$scope.invalidusername = true;
-						console.log("failed");
-					});
-			}
-			
-			$scope.newstaffacc = function() {
-				$scope.verifyInputs();
-				$http.post("/api/v1/users", $scope.login.username).then(
-					function(success) {
-						sessionStorage.userID = success.data.username;
-						sessionStorage.userType = success.data.role;
-						window.location.replace("http://localhost:8080/home");
-					}, function(rejection) {
-						$scope.invalidusername = true;
-						console.log("failed");
-					});
+				if(!$scope.invalid){
+					$http.post("/api/v1/users/customers", $scope.login.username + ":" + $scope.login.password).then(
+						function(success) {
+							sessionStorage.userID = success.data.username;
+							sessionStorage.userType = success.data.role;
+							window.location.replace("http://localhost:8080/home");
+						}, function(rejection) {
+							$scope.invalidusername = true;
+							console.log("failed");
+						});
+				}
 			}
 			
 			$scope.guest = function() {
 				$http.post("/api/v1/users/guests").then(
 					function(success) {
 						sessionStorage.userID = success.data.username;
+						sessionStorage.userType = success.data.role;
 						window.location.replace("http://localhost:8080/home");
 					}, function(rejection) {
 						console.log("failed");
@@ -111,10 +99,10 @@ input.ng-dirty.ng-invalid-min {
 			// add any input restrictions here
 			$scope.verifyInputs = function() {
 				if($scope.login.username.includes(":") || $scope.login.username.includes(" ") || $scope.login.username.toLowerCase().includes("guest")){
-					$scope.invalidusername = true;
+					$scope.invalid = true;
 				}
 				if($scope.login.password.includes(":") || $scope.login.password.includes(" ")){
-					$scope.invalidpassword = true;
+					$scope.invalid = true;
 				}
 			}
 
@@ -127,7 +115,7 @@ input.ng-dirty.ng-invalid-min {
 						sessionStorage.userType = success.data.role;
 						window.location.replace("http://localhost:8080/home");
 					}, function(rejection) {
-						$scope.invalidusername = true;
+						$scope.invalid = true;
 						console.log("failed");
 					});
 			}
@@ -156,8 +144,8 @@ input.ng-dirty.ng-invalid-min {
 						<div class="form-group col-md-12">
 							<label class="col-md-2 control-lable" for="file">        Username</label>
 							<div class="col-md-7">
-								<input type="text" ng-click="clearerror()" ng-model="login.username" name="username"
-									class="username form-control input-sm"
+								<input ng-click="clearerror()" ng-model="login.username" name="username"
+									class="password form-control input-sm"
 									placeholder="Enter valid username" required="0" />
 							</div>
 						</div>
@@ -178,29 +166,26 @@ input.ng-dirty.ng-invalid-min {
 					don't go messing around with the indentation too much -->
 					<div class="row">
 						<div class="form-actions float"> <!-- Used to align the submit and reset buttons. -->
-							<div class="submit">
+							<div > <center>
 								<input type="submit" value="Login"
 									class="btn btn-primary btn-sm"
 									ng-disabled="loginForm.$invalid" /> 
 								<button type="button" ng-click="newacc()"
 									class="btn btn-primary btn-sm"
-									ng-disabled="loginForm.$invalid">Customer Account</button>
+									ng-disabled="loginForm.$invalid">Create Customer Account</button>           
+									</center>
 								</div>
 							<div> </div>
 							<div class="submit">
 								   <button type="button" ng-click="guest()"
 									class="btn btn-primary btn-sm">
-									Guest</button> 
-									<button type="button" ng-click="newstaffacc()"
-									class="btn btn-primary btn-sm"
-									ng-disabled="loginForm.$invalid">Staff Account</button>
+									Continue as Guest</button> 
 							</div>
 						</div>
 					</div>
 				</form>
 			</div>
-			<div ng-show="invalidusername"><center>Invalid Username           </center></div>
-			<div ng-show="invalidpassword"><center>Invalid Password           </center></div>
+			<div class="formcontainer" ng-show="invalid"><center>Error: Invalid Credentials           </center></div>
 			<div> </div>
 			<div class="margins"> </div>
 			<div class="margins"> </div>

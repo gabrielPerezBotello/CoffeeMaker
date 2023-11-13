@@ -8,7 +8,7 @@ input.ng-valid {
 }
 
 input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
-	background-color: red;
+	background-color: #EFDECD;
 }
 
 input.ng-dirty.ng-invalid-min {
@@ -50,6 +50,8 @@ input.ng-dirty.ng-invalid-min {
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('addRecipeCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+
 
 			$scope.reset = function() {
 				$scope.recipe = {
@@ -204,13 +206,11 @@ input.ng-dirty.ng-invalid-min {
 							<div class="submit">
 								<input type="submit" value="Add Recipe"
 									class="btn btn-primary btn-sm"
-									ng-disabled="addRecipeForm.$invalid" />
-								</div>
-							<div class="reset">
+									ng-disabled="addRecipeForm.$invalid" /> 
 								<button type="button" ng-click="reset()"
 									class="btn btn-warning btn-sm"
 									ng-disabled="addRecipeForm.$pristine">Reset Form</button>
-								</div>
+							</div>
 						</div>
 					</div>
 				</form>
@@ -221,8 +221,9 @@ input.ng-dirty.ng-invalid-min {
 		</div>
 
 		<div class="margins"> </div>
-		<div class="margins"><a style="float:left" href="/home">  Home  </a></div>
-		<div class="margins"> </div>
+		<div class="homeLink"> 
+            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+        </div> 	
 		<div class="margins"> </div>
 
 	</div>

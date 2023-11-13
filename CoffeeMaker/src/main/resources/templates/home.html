@@ -17,8 +17,9 @@
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('indexCtrl', function($scope, $http, $q) {
-			document.getElementById("result").innerHTML = sessionStorage.userID;
-			
+			document.getElementById("userID").innerHTML = sessionStorage.userID;
+			document.getElementById("userType").innerHTML = sessionStorage.userType;
+
 			$scope.user = sessionStorage.userType;
 			
 			$scope.inv = true
@@ -55,8 +56,10 @@
 		ng-controller="indexCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 
-			<b id = "result" class="userHeader"></b>
-			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+			<b id = "userID" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25"> 
+			<b id = "userType" class="userHeader"></b>
+
 		</div>
 		<div class="margins"> </div>
 		<center>
@@ -65,16 +68,18 @@
 			<h2>Available Options</h2>
 			<div class="btn-group-vertical bottomSpacer">
 			<!-- onclick code retrieved from: https://www.scaler.com/topics/how-to-make-a-button-link-to-another-page-in-html/ -->
-			<button class="menuButton" type="button" ng-show="inv" onclick="window.location.href = 'inventory.html';">Update Inventory</button>
-			<button class="menuButton" type="button" ng-show="recipe" onclick="window.location.href = 'recipe.html';">Add a Recipe</button>
-			<button class="menuButton" type="button" ng-show="edit" onclick="window.location.href = 'editrecipe.html';">Edit Recipe</button>
+			<button class="menuButton" type="button" ng-show="recipe" onclick="window.location.href = 'recipe.html';">Add Recipe</button>
 			<button class="menuButton" type="button" ng-show="delete" onclick="window.location.href = 'deleterecipe.html';">Delete Recipe</button>
+			<button class="menuButton" type="button" ng-show="edit" onclick="window.location.href = 'editrecipe.html';">Edit Recipe</button>
+			<button class="menuButton" type="button" ng-show="inv" onclick="window.location.href = 'inventory.html';">Update Inventory</button>
 			<button class="menuButton" type="button" ng-show="ing" onclick="window.location.href = 'ingredient.html';">Add Ingredient</button>
-			<button class="menuButton" type="button" ng-show="view" onclick="window.location.href = 'vieworders.html';">View Orders</button>
+			<button class="menuButton" type="button" ng-show="view" onclick="window.location.href = 'vieworders.html';">View/Fulfill Order</button>
 			<button class="menuButton" type="button" ng-show="add" onclick="window.location.href = 'addbarista.html';">Add Barista</button>
 			<button class="menuButton" type="button" ng-show="remove" onclick="window.location.href = 'removebarista.html';">Remove Barista</button>
-			<button class="menuButton" type="button" ng-show="order" onclick="window.location.href = 'order.html';">Place Order</button>
-			<button class="menuButton" type="button" ng-show="pickup" onclick="window.location.href = 'pickup.html';">Pickup Order</button>
+			<button class="menuButton" type="button" ng-show="order" onclick="window.location.href = 'order.html';">Place an Order</button>
+			<button class="menuButton" type="button" ng-show="pickup" onclick="window.location.href = 'pickup.html';">Order Pickup</button>
+			<div> </div>
+			<button class="menuButton" type="button" onclick="window.location.href = '/';">Log Out</button>
 			</div>
 			</center>
 		</div>
