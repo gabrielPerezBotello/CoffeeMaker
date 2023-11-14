@@ -18,6 +18,11 @@
 			
 			$scope.user = sessionStorage.userType;
 			
+			$scope.validAccess = true;
+			if($scope.user != "CUSTOMER"){
+				$scope.validAccess = false;
+			}
+			
 			$http.get("/api/v1/orders").then(function(response) {
 				$scope.orders = response.data;
 				$scope.sortOrders();
@@ -85,7 +90,7 @@
 		/*]]>*/
 	</script>
 
-	<div layout:fragment="content" class="generic-container ng-cloak"
+	<div ng-show="validAccess" layout:fragment="content" class="generic-container ng-cloak"
 		ng-app="myApp" ng-controller="pickupCtrl">
 		<div class="margins"> </div>
 		<div class="margins"> 

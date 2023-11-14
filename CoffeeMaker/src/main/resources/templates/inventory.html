@@ -34,6 +34,11 @@ input.ng-dirty.ng-invalid-min {
 			
 			$scope.user = sessionStorage.userType;
 			
+			$scope.validAccess = true;
+			if($scope.user != "MANAGER" && $scope.user != "BARISTA"){
+				$scope.validAccess = false;
+			}
+			
 			$scope.inventoryOriginal
 
 			$scope.getInventory = function() {
@@ -116,7 +121,7 @@ input.ng-dirty.ng-invalid-min {
 
 
 
-	<div class="generic-container ng-cloak" ng-app="myApp"
+	<div ng-show="validAccess" class="generic-container ng-cloak" ng-app="myApp"
 		ng-controller="inventoryCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 
