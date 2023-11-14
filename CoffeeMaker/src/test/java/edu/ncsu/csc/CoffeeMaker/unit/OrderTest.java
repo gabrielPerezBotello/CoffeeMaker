@@ -22,6 +22,7 @@ import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.OrderStatus;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
+import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
@@ -35,11 +36,18 @@ public class OrderTest {
     private CustomerOrderService service;
 
     /**
+     * RecipeService object to be used in testing.
+     */
+    @Autowired
+    private RecipeService        recipeService;
+
+    /**
      * Sets up testing environment.
      */
     @BeforeEach
     public void setup () {
         service.deleteAll();
+        recipeService.deleteAll();
     }
 
     /**
@@ -64,15 +72,15 @@ public class OrderTest {
         r1.addIngredient( chocolate );
 
         final CustomerOrder o1 = new CustomerOrder( "Sharon", 1, r1 );
-        o1.setPayment( 10 );
+        o1.setPayment( (double) 10 );
         o1.setReview( "good" );
 
         // Save order
-
+        recipeService.save( r1 );
         service.save( o1 );
 
         final CustomerOrder o2 = new CustomerOrder( "John", 2, r1 );
-        o2.setPayment( 15 );
+        o2.setPayment( (double) 15 );
         o2.setReview( "fine" );
 
         // Save order
@@ -132,6 +140,7 @@ public class OrderTest {
 
         // Saving null order
         final CustomerOrder o1 = null;
+        recipeService.save( r1 );
         service.save( o1 );
 
         // Saving invalid orders

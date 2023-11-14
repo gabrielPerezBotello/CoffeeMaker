@@ -22,54 +22,54 @@ public class CustomerOrder extends DomainObject {
      * Represents the value of the review field BEFORE it is set to a valid
      * (i.e. non-empty) String.
      */
-    private final static String  REVIEW_NOT_SET  = null;
+    private final static String            REVIEW_NOT_SET  = null;
 
     /**
      * Represents the value of the payment field BEFORE it is set to a valid
      * (i.e. > 0) Integer.
      */
-    private final static Integer PAYMENT_NOT_SET = 0;
+    private final static @Min ( 0 ) Double PAYMENT_NOT_SET = (double) 0;
 
     /**
      * id for Order
      */
     @Id
     @GeneratedValue
-    private Long                 id;
+    private Long                           id;
 
     /**
      * customer name for Order
      */
-    private final String         customerName;
+    private final String                   customerName;
 
     /**
      * status of Order
      */
-    private OrderStatus          orderStatus;
+    private OrderStatus                    orderStatus;
 
     /**
      * orderID for Order
      */
-    private final Integer        orderID;
+    private final Integer                  orderID;
 
     /**
      * review for Order
      */
-    private String               review;
+    private String                         review;
 
     /** placement time */
-    private final Long           placementTime;
+    private final Long                     placementTime;
 
     /** payment */
     @Min ( 0 )
-    private Integer              payment;
+    private Double                         payment;
 
     /**
      * Recipe
      */
-    @OneToOne ( cascade = CascadeType.ALL )
+    @OneToOne ( cascade = CascadeType.MERGE )
     @JoinColumn ( nullable = false, name = "recipe_id" )
-    private final Recipe         recipe;
+    private final Recipe                   recipe;
 
     public CustomerOrder () {
         this.customerName = "";
@@ -231,7 +231,7 @@ public class CustomerOrder extends DomainObject {
      *
      * @return payment
      */
-    public Integer getPayment () {
+    public @Min ( 0 ) Double getPayment () {
         return payment;
     }
 
@@ -241,7 +241,7 @@ public class CustomerOrder extends DomainObject {
      * @param payment
      *            of order
      */
-    public void setPayment ( final Integer payment ) {
+    public void setPayment ( final @Min ( 0 ) Double payment ) {
 
         // Check whether the payment has already been made/set.
         //

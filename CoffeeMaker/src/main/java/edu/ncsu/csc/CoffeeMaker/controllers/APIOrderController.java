@@ -84,12 +84,16 @@ public class APIOrderController extends APIController {
      *         saved to the inventory, or an error if it could not be
      */
     @PostMapping ( BASE_PATH + "/orders" )
-    public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
-        System.out.println( order );
-        // CustomerOrder newOrder = new CustomerOrder(order.)
+    public double placeOrder ( @RequestBody final CustomerOrder order ) {
+        System.out.println( order.getCustomerName() );
+        System.out.println( order.getId() );
+        System.out.println( order.getPayment() );
+
+        // final CustomerOrder newOrder = new CustomerOrder( username, 0,
+        // (Recipe) recipeService.findById( id ) );
         service.save( order );
-        return new ResponseEntity( successResponse( order.getCustomerName() + " successfully created" ),
-                HttpStatus.OK );
+
+        return order.getPayment() - order.getRecipe().getPrice();
 
     }
 

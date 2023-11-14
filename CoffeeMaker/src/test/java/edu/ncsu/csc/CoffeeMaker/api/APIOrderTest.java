@@ -26,6 +26,7 @@ import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
 import edu.ncsu.csc.CoffeeMaker.models.CustomerOrder;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
+import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,6 +44,12 @@ public class APIOrderTest {
 
     @Autowired
     private CustomerOrderService  service;
+
+    /**
+     * RecipeService object to be used in testing.
+     */
+    @Autowired
+    private RecipeService         recipeService;
 
     /**
      * Sets up the tests.
@@ -64,7 +71,11 @@ public class APIOrderTest {
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 5 );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipe );
+        mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
+
+        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
@@ -89,7 +100,11 @@ public class APIOrderTest {
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 5 );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipe );
+        mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
+
+        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
@@ -109,10 +124,14 @@ public class APIOrderTest {
         /* Tests a recipe with a duplicate name to make sure it's rejected */
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Orders in the CoffeeMaker" );
         final Recipe recipe = new Recipe();
+
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 5 );
+        mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipe );
+        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
@@ -120,10 +139,13 @@ public class APIOrderTest {
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 1 Order in the CoffeeMaker" );
 
         final Recipe recipe2 = new Recipe();
-        recipe2.setName( "Delicious Not-Coffee" );
+        recipe2.setName( "Delicious Not-Coffee2" );
         recipe2.setPrice( 5 );
 
-        final CustomerOrder o2 = new CustomerOrder( "Jamie", 1, recipe2 );
+        mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( recipe2 ) ) ).andExpect( status().isOk() );
+
+        final CustomerOrder o2 = new CustomerOrder( "Jamie", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o2 ) ) ).andExpect( status().isOk() );
@@ -141,8 +163,10 @@ public class APIOrderTest {
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 5 );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 125, recipe );
+        mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
+        final CustomerOrder o = new CustomerOrder( "sharon", 125, recipeService.findByName( "Delicious Not-Coffee" ) );
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
 
