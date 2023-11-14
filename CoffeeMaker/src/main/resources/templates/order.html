@@ -23,13 +23,41 @@
 			});
 
 			$scope.make = function() {
-				var amtPaid = $scope.amtPaid;
-				var name = $scope.name;
+				var idx = 0;
+				for(recipe in $scope.recipes){
+					if($scope.recipes[idx].name == $scope.name){
+						var recipeObject = $scope.recipes[idx];
+					}
+					idx++;
+				}
+				idx = 0;
+				var ings = [];
+				for(ingredient in recipeObject.ingredients){
+					ing = {name : ingredient.name, amount : ingredient.amount};
+					ings[idx] = ing;
+					idx++;
+				}
+				var orderRecipe = {
+					name : recipeObject.name,
+					price : recipeObject.price,
+					ingredients : ings
+				}
+				var order = {
+					customerName : sessionStorage.userID,
+					orderStatus : 0,
+					orderID : 0,
+					review : "",
+					placementTime : Date.now(),
+					payment : $scope.amtPaid,
+					recipe : orderRecipe
+				};
+				console.log(order);
 				$scope.submissionFailure = false;
 				$scope.submissionSuccess = false;
-				$http.post("/api/v1/makecoffee/" + name, amtPaid).then(
+				$http.post("/api/v1/orders", order).then(
 						function(response) {
-							$scope.change = response.data.message;
+							console.log(response);
+							//$scope.change = response.data.message;
 							$scope.submissionSuccess = true;
 						}, function(errResponse) {
 							console.log(errResponse);
@@ -51,33 +79,36 @@
 			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
 		</div>
 		<div class="margins"> </div>
-		<h1>Coffee Recipes</h1>
-		<div>
-			<ul>
-				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
-						<input type="radio" ng-model="$parent.name" name="name"
-						value="{{recipe.name}}" required="true" />
-				</label></li>
-			</ul>
-			<br /> <label for="amtPaid">Enter payment</label> <input type="text"
-				ng-model="amtPaid" name="amtPaid" required="true" /> <br />
-				<div> </div>
-				<input
-				type="submit" ng-click="make()" value="Make Coffee"
-				class="btn btn-primary btn-sm" /> <br />
-
-			<div ng-show="submissionSuccess" class="success">Coffee was
-				made. Your change is {{change}}.</div>
-
-			<div ng-show="submissionFailure">An error occurred: {{error}}</div>
+		<div class="formcontainer">
+			<center><h1>Order Placement</h1></center>
+			<h4>Coffee Recipes</h4>
+			<div>
+				<ul>
+					<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
+							<input type="radio" ng-model="$parent.name" name="name"
+							value="{{recipe.name}}" required="true" />
+					</label></li>
+				</ul>
+				<br /> <label for="amtPaid">Enter payment</label> <input type="text"
+					ng-model="amtPaid" name="amtPaid" required="true" /> <br />
+					<div> </div>
+					<input
+					type="submit" ng-click="make()" value="Place Order"
+					class="btn btn-primary btn-sm" /> <br />
+	
+				<div ng-show="submissionSuccess" class="success">Order was
+					placed. Your change is {{change}}.</div>
+	
+				<div ng-show="submissionFailure">An error occurred: {{error}}</div>
+			</div>
+			<div> </div>
+			<div> </div>
+			<div class="margins"> </div>
+			<div class="homeLink"> 
+	            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+	        </div> 
+			<div class="margins"> </div>
 		</div>
-		<div> </div>
-		<div> </div>
-		<div class="margins"> </div>
-		<div class="homeLink"> 
-            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
-        </div> 
-		<div class="margins"> </div>
 	</div>
 
 </body>

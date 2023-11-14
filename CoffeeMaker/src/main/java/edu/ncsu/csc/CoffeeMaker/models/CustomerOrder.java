@@ -71,6 +71,16 @@ public class CustomerOrder extends DomainObject {
     @JoinColumn ( nullable = false, name = "recipe_id" )
     private final Recipe         recipe;
 
+    public CustomerOrder () {
+        this.customerName = "";
+        this.orderStatus = OrderStatus.PENDING;
+        this.orderID = 0;
+        this.review = REVIEW_NOT_SET;
+        this.placementTime = System.currentTimeMillis();
+        this.payment = PAYMENT_NOT_SET;
+        this.recipe = null;
+    }
+
     /**
      * Constructor
      *
@@ -91,6 +101,23 @@ public class CustomerOrder extends DomainObject {
         this.recipe = recipe;
 
     }
+
+    // /**
+    // * Constructor
+    // *
+    // * @param order
+    // * the order to be placed
+    // */
+    // public CustomerOrder ( final CustomerOrder order ) {
+    // this.customerName = customerName;
+    // this.orderStatus = OrderStatus.PENDING;
+    // this.orderID = orderID;
+    // this.review = REVIEW_NOT_SET;
+    // this.placementTime = System.currentTimeMillis();
+    // this.payment = PAYMENT_NOT_SET;
+    // this.recipe = recipe;
+    //
+    // }
 
     /**
      * advances the order to the next stage

@@ -85,7 +85,8 @@ public class APIOrderController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/orders" )
     public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
-
+        System.out.println( order );
+        // CustomerOrder newOrder = new CustomerOrder(order.)
         service.save( order );
         return new ResponseEntity( successResponse( order.getCustomerName() + " successfully created" ),
                 HttpStatus.OK );
@@ -149,12 +150,13 @@ public class APIOrderController extends APIController {
      *         Customer Order does not exist
      */
     @PutMapping ( BASE_PATH + "/orders/pickup/{orderID}" )
-    public ResponseEntity pickupOrder ( @PathVariable final Integer orderID ) {
+    public ResponseEntity pickupOrder ( @PathVariable final Integer orderID, @RequestBody final String review ) {
         final CustomerOrder order = service.findByOrderID( orderID );
         if ( null == order || !order.getStatus().equals( OrderStatus.FULFILLED ) ) {
             return new ResponseEntity( errorResponse( "No Order found for name " + orderID ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
+        order.setReview( review );
         service.save( order );
 
         return new ResponseEntity( successResponse( order.getOrderID() + " was edited successfully" ), HttpStatus.OK );

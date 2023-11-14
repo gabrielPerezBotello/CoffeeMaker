@@ -134,6 +134,19 @@ public class MappingController {
     }
 
     /**
+     * On a GET request to /index, the IndexController will return
+     * /src/main/resources/templates/index.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/pickup", "/pickup.html" } )
+    public String pickupPage ( final Model model ) {
+        return "pickup";
+    }
+
+    /**
      * On a GET request to /addbarista, the addBaristaController will return
      * /src/main/resources/templates/addbarista.html.
      *
