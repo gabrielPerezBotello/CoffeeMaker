@@ -84,16 +84,20 @@ public class APIOrderController extends APIController {
      *         saved to the inventory, or an error if it could not be
      */
     @PostMapping ( BASE_PATH + "/orders" )
-    public double placeOrder ( @RequestBody final CustomerOrder order ) {
+    public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
         System.out.println( order.getCustomerName() );
         System.out.println( order.getId() );
         System.out.println( order.getPayment() );
 
         // final CustomerOrder newOrder = new CustomerOrder( username, 0,
         // (Recipe) recipeService.findById( id ) );
+        final double change = order.getPayment() - order.getRecipe().getPrice();
+        if ( change < 0 ) {
+            return new ResponseEntity( errorResponse( "Not enough money paid" ), HttpStatus.CONFLICT );
+        }
         service.save( order );
 
-        return order.getPayment() - order.getRecipe().getPrice();
+        return new ResponseEntity<String>( successResponse( String.valueOf( change ) ), HttpStatus.OK );
 
     }
 

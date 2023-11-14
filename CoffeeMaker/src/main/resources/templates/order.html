@@ -58,12 +58,12 @@
 				$http.post("/api/v1/orders", order).then(
 						function(response) {
 							console.log(response);
-							//$scope.change = response.data.message;
+							$scope.change = response.data.message;
 							$scope.submissionSuccess = true;
 						}, function(errResponse) {
 							console.log(errResponse);
 							$scope.submissionFailure = true;
-							$scope.error = "Error while making recipe";
+							$scope.error = "Invalid payment";
 						});
 
 			}
@@ -98,7 +98,7 @@
 					class="btn btn-primary btn-sm" /> <br />
 	
 				<div ng-show="submissionSuccess" class="success">Order was
-					placed. Your change is {{change}}.</div>
+					placed. Your change is ${{change}}.</div>
 	
 				<div ng-show="submissionFailure">An error occurred: {{error}}</div>
 			</div>

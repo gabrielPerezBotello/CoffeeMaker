@@ -69,7 +69,7 @@ public class APIOrderTest {
 
         final Recipe recipe = new Recipe();
         recipe.setName( "Delicious Not-Coffee" );
-        recipe.setPrice( 5 );
+        recipe.setPrice( 0 );
 
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
@@ -98,7 +98,7 @@ public class APIOrderTest {
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Orders in the CoffeeMaker" );
         final Recipe recipe = new Recipe();
         recipe.setName( "Delicious Not-Coffee" );
-        recipe.setPrice( 5 );
+        recipe.setPrice( 0 );
 
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
@@ -126,7 +126,7 @@ public class APIOrderTest {
         final Recipe recipe = new Recipe();
 
         recipe.setName( "Delicious Not-Coffee" );
-        recipe.setPrice( 5 );
+        recipe.setPrice( 0 );
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
@@ -161,7 +161,7 @@ public class APIOrderTest {
 
         final Recipe recipe = new Recipe();
         recipe.setName( "Delicious Not-Coffee" );
-        recipe.setPrice( 5 );
+        recipe.setPrice( 0 );
 
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
