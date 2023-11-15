@@ -112,14 +112,14 @@ public class APIOrderController extends APIController {
      *         Customer Order does not exist
      */
     @DeleteMapping ( BASE_PATH + "/orders/{Id}" )
-    public ResponseEntity deleteCustomerOrder ( @PathVariable final Long Id ) {
-        final CustomerOrder order = service.findById( Id );
+    public ResponseEntity deleteCustomerOrder ( @PathVariable final Long id ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order ) {
-            return new ResponseEntity( errorResponse( "No order found for Id: " + Id ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for Id: " + id ), HttpStatus.NOT_FOUND );
         }
         service.delete( order );
 
-        return new ResponseEntity( successResponse( Id + " was deleted successfully" ), HttpStatus.OK );
+        return new ResponseEntity( successResponse( id + " was deleted successfully" ), HttpStatus.OK );
     }
 
     /**
@@ -134,10 +134,10 @@ public class APIOrderController extends APIController {
      *         Customer Order does not exist
      */
     @PutMapping ( BASE_PATH + "/orders/fulfill/{Id}" )
-    public ResponseEntity fulfillOrder ( @PathVariable final Long Id ) {
-        final CustomerOrder order = service.findById( Id );
+    public ResponseEntity fulfillOrder ( @PathVariable final Long id ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.PENDING ) ) {
-            return new ResponseEntity( errorResponse( "No order found for order ID: " + Id ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for order ID: " + id ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
         service.save( order );
@@ -156,10 +156,10 @@ public class APIOrderController extends APIController {
      *         Customer Order does not exist
      */
     @PutMapping ( BASE_PATH + "/orders/pickup/{Id}" )
-    public ResponseEntity pickupOrder ( @PathVariable final Long Id, @RequestBody final String review ) {
-        final CustomerOrder order = service.findById( Id );
+    public ResponseEntity pickupOrder ( @PathVariable final Long id, @RequestBody final String review ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.FULFILLED ) ) {
-            return new ResponseEntity( errorResponse( "No Order found for name " + Id ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No Order found for name " + id ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
         order.setReview( review );

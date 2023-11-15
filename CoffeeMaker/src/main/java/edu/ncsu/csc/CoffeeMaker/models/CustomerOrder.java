@@ -64,6 +64,9 @@ public class CustomerOrder extends DomainObject {
     @JoinColumn ( nullable = false, name = "recipe_id" )
     private final Recipe                   recipe;
 
+    /**
+     * Default CustomerOrder constructor
+     */
     public CustomerOrder () {
         this.customerName = "";
         this.orderStatus = OrderStatus.PENDING;
@@ -78,8 +81,6 @@ public class CustomerOrder extends DomainObject {
      *
      * @param customerName
      *            customers name
-     * @param orderID
-     *            ID of order
      * @param recipe
      *            the recipe that the customer chose to order
      */
