@@ -17,6 +17,11 @@
 			
 			$scope.user = sessionStorage.userType;
 			
+			$scope.validAccess = true;
+			if($scope.user != "MANAGER" && $scope.user != "BARISTA"){
+				$scope.validAccess = false;
+			}
+			
 			function updateRecipes() {
 				$http.get("/api/v1/recipes").then(function (response) {
 	  				$scope.recipes = response.data;
@@ -65,7 +70,7 @@
 	/*]]>*/
 	</script>
 
-	<div layout:fragment="content" class="generic-container ng-cloak"
+	<div ng-show="validAccess" layout:fragment="content" class="generic-container ng-cloak"
 		ng-app="myApp" ng-controller="recipesCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 

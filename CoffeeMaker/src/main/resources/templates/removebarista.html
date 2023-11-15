@@ -53,6 +53,11 @@ input.ng-dirty.ng-invalid-min {
 			document.getElementById("result").innerHTML = sessionStorage.userID;
 			
 			$scope.user = sessionStorage.userType;
+			
+			$scope.validAccess = true;
+			if($scope.user != "MANAGER"){
+				$scope.validAccess = false;
+			}
 
 			$scope.reset = function() {
 				$scope.barista = {
@@ -99,7 +104,7 @@ input.ng-dirty.ng-invalid-min {
 
 
 
-	<div ng-app="myApp" class="generic-container ng-cloak"
+	<div ng-show="validAccess" ng-app="myApp" class="generic-container ng-cloak"
 		ng-controller="removeBaristaCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 

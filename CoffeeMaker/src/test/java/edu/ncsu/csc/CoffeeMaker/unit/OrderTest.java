@@ -22,6 +22,7 @@ import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.OrderStatus;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
+import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
@@ -35,11 +36,18 @@ public class OrderTest {
     private CustomerOrderService service;
 
     /**
+     * RecipeService object to be used in testing.
+     */
+    @Autowired
+    private RecipeService        recipeService;
+
+    /**
      * Sets up testing environment.
      */
     @BeforeEach
     public void setup () {
         service.deleteAll();
+        recipeService.deleteAll();
     }
 
     /**
@@ -63,16 +71,16 @@ public class OrderTest {
         r1.addIngredient( sugar );
         r1.addIngredient( chocolate );
 
-        final CustomerOrder o1 = new CustomerOrder( "Sharon", 1, r1 );
-        o1.setPayment( 10 );
+        final CustomerOrder o1 = new CustomerOrder( "Sharon", r1 );
+        o1.setPayment( (double) 10 );
         o1.setReview( "good" );
 
         // Save order
-
+        recipeService.save( r1 );
         service.save( o1 );
 
-        final CustomerOrder o2 = new CustomerOrder( "John", 2, r1 );
-        o2.setPayment( 15 );
+        final CustomerOrder o2 = new CustomerOrder( "John", r1 );
+        o2.setPayment( (double) 15 );
         o2.setReview( "fine" );
 
         // Save order
@@ -90,22 +98,20 @@ public class OrderTest {
         assertTrue( o1.getStatus().equals( OrderStatus.FULFILLED ) );
         o1.advanceStatus();
         o1.toString();
-        final CustomerOrder o3 = new CustomerOrder( "Sharon", 1, r1 );
+        final CustomerOrder o3 = new CustomerOrder( "Sharon", r1 );
 
         assertTrue( o1.equals( o3 ) );
 
-        final CustomerOrder o4 = new CustomerOrder( null, 1, r1 );
+        final CustomerOrder o4 = new CustomerOrder( null, r1 );
 
         assertFalse( o4.equals( o3 ) );
 
         assertTrue( o1.getCustomerName().equals( "Sharon" ) );
-        assertTrue( o1.getOrderID().equals( 1 ) );
         assertTrue( o1.getReview().equals( "good" ) );
         assertTrue( o1.getPlacementTime() > 0 );
         assertTrue( o1.getPayment() == 10 );
 
         assertTrue( service.findByCustomerName( "Sharon" ).equals( o1 ) );
-        assertTrue( service.findByOrderID( 1 ).equals( o1 ) );
 
     }
 
@@ -132,14 +138,13 @@ public class OrderTest {
 
         // Saving null order
         final CustomerOrder o1 = null;
+        recipeService.save( r1 );
         service.save( o1 );
 
         // Saving invalid orders
-        final CustomerOrder o2 = new CustomerOrder( null, 1, r1 );
-        final CustomerOrder o3 = new CustomerOrder( "Bobert", null, r1 );
-        final CustomerOrder o4 = new CustomerOrder( "Bobert", 1, null );
+        final CustomerOrder o2 = new CustomerOrder( null, r1 );
+        final CustomerOrder o4 = new CustomerOrder( "Bobert", null );
         service.save( o2 );
-        service.save( o3 );
         service.save( o4 );
 
         final List<CustomerOrder> orders = service.findAll();

@@ -52,6 +52,12 @@ input.ng-dirty.ng-invalid-min {
 		app.controller('addRecipeCtrl', function($scope, $http, $q) {
 			document.getElementById("result").innerHTML = sessionStorage.userID;
 
+			$scope.user = sessionStorage.userType;
+
+			$scope.validAccess = true;
+			if($scope.user != "MANAGER" && $scope.user != "BARISTA"){
+				$scope.validAccess = false;
+			}
 
 			$scope.reset = function() {
 				$scope.recipe = {
@@ -132,7 +138,7 @@ input.ng-dirty.ng-invalid-min {
 
 
 
-	<div ng-app="myApp" class="generic-container ng-cloak"
+	<div ng-show="validAccess" ng-app="myApp" class="generic-container ng-cloak"
 		ng-controller="addRecipeCtrl as ctrl">
 		<div class="margins"> </div>
 		<div class="margins"> 

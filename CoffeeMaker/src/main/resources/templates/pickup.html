@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>View Recipes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+</head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+	<script th:inline="javascript">
+		/*<![CDATA[*/
+
+		var app = angular.module('myApp', []);
+		app.controller('pickupCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
+			
+			$scope.validAccess = true;
+			if($scope.user != "CUSTOMER"){
+				$scope.validAccess = false;
+			}
+			
+			$scope.getOrders = function() {
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.orders = response.data;
+					$scope.sortOrders();
+				});
+			}
+			
+			$scope.getOrders();
+			
+			$scope.toOrder = [];
+			
+			$scope.sortOrders = function() {
+				$scope.pendingOrders = [];
+				$scope.fulfilledOrders = [];
+				idx = 0;
+				i = 0;
+				j = 0;
+				for(order in $scope.orders){
+					if($scope.orders[idx].status == "PENDING" && $scope.orders[idx].customerName == sessionStorage.userID){
+						$scope.pendingOrders[i] = $scope.orders[idx];
+						i++;
+					}
+					else if($scope.orders[idx].status == "FULFILLED" && $scope.orders[idx].customerName == sessionStorage.userID){
+						$scope.fulfilledOrders[j] = $scope.orders[idx];
+						j++
+					}
+					idx++;
+				}
+			}
+			
+			$scope.changed = function(idx){
+				if($scope.toOrder.includes($scope.fulfilledOrders[idx])){
+					var index = $scope.toOrder.indexOf($scope.fulfilledOrders[idx]);
+					if (index > -1) { // only splice array when item is found
+					  $scope.toOrder.splice(index, 1); 
+					}
+				} else {
+					$scope.toOrder.push($scope.fulfilledOrders[idx]);
+				}
+				if($scope.toOrder.length == 0){
+					$scope.selected = false;
+				} else {
+					$scope.selected = true;
+				}
+			}
+			
+			/*
+			 * Converts currentTimeMilis from order field to an understandable format hh:mm
+			 * for the customer to read
+			 * 
+			 */
+			$scope.msToTime = function(s) {
+			  var ms = s % 1000;
+			  s = (s - ms) / 1000;
+			  var secs = s % 60;
+			  s = (s - secs) / 60;
+			  var mins = s % 60;
+			  var hrs = ((s - mins) / 60 - 5) % 24;
+			  
+			  if(hrs > 12){
+			    return hrs - 12 + ':' + ('00' + mins).slice(-2) + ' PM';
+			  }
+			  return hrs + ':' + ('00' + mins).slice(-2) + ' AM';
+			}
+
+			$scope.pickup = function() {
+				$scope.submissionFailure = false;
+				$scope.submissionSuccess = false;
+				i = 0;
+				for(order in $scope.toOrder){
+					$http.put("/api/v1/orders/pickup/" + $scope.toOrder[i].orderID, $scope.review).then(
+						function(response) {
+							console.log(response);
+							//$scope.change = response.data.message;
+							$scope.submissionSuccess = true;
+						}, function(errResponse) {
+							console.log(errResponse);
+							$scope.submissionFailure = true;
+							$scope.error = "Error while picking up order";
+						});
+									
+					i++;
+				}
+				$scope.pickupForm.$setPristine(); // reset Form
+			}
+			
+			const interval = setInterval(function() {
+		      $scope.getOrders();
+			}, 5000);
+			
+		});
+		
+		/*]]>*/
+	</script>
+
+	<div ng-show="validAccess" layout:fragment="content" class="generic-container ng-cloak"
+		ng-app="myApp" ng-controller="pickupCtrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
+		<div class="formcontainer">
+			<form ng-submit="pickup()" name="pickupForm"
+				class="form-horizontal">
+				<center><h1>Order Pickup</h1></center>
+				<h4>Pending Orders</h4>
+				<ul>
+					<li ng-repeat="order in pendingOrders"><label>{{order.recipe.name}} - {{msToTime(order.placementTime)}}
+					</label></li>
+				</ul>
+				<h4>Fulfilled Orders</h4>
+				<ul>
+					<div ng-repeat="order in fulfilledOrders track by $index">
+						<input type="checkbox"
+							ng-change="changed($index)"
+							ng-model="selectedOrders[order.name]">
+							<tt> {{order.recipe.name}} - {{msToTime(order.placementTime)}}</tt> 
+						</input>
+					</div>
+				</ul>
+				<br /> <label ng-show="selected">Leave a Review?</label> 
+					<input ng-show="selected" type="text" ng-model="review" name="review"
+						class="form-control input-sm"
+						required="0" />
+					<div> </div>
+					
+					<input ng-show="selected" type="submit" ng-click="pickup()" value="Pickup Order"
+					class="btn btn-primary btn-sm" /> <br />
+			</form>
+	
+				<div ng-show="submissionSuccess" class="success">Thank you for ordering with CoffeeMaker!</div>
+	
+				<div ng-show="submissionFailure">An error occurred: {{error}}</div>
+			</div>
+			<div> </div>
+			<div> </div>
+			<div class="margins"> </div>
+			<div class="homeLink"> 
+	            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+	        </div>
+			<div class="margins"> </div>
+		</div>
+
+</body>
+</html>
