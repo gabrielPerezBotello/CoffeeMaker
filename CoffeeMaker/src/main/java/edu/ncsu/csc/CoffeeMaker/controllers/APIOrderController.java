@@ -106,8 +106,8 @@ public class APIOrderController extends APIController {
      * Inventory, by making a DELETE request to the API endpoint and indicating
      * the Customer Order to delete (as a path variable)
      *
-     * @param Id
-     *            The Id of the Customer Order to delete
+     * @param id
+     *            The id of the Customer Order to delete
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
@@ -127,8 +127,8 @@ public class APIOrderController extends APIController {
      * Inventory, by making a PUT request to the API endpoint and indicating the
      * Customer Order to update (as a path variable)
      *
-     * @param Id
-     *            The Id of the Customer Order to update
+     * @param id
+     *            The id of the Customer Order to update
      *
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
@@ -150,8 +150,10 @@ public class APIOrderController extends APIController {
      * Inventory, by making a PUT request to the API endpoint and indicating the
      * Customer Order to update (as a path variable)
      *
-     * @param Id
-     *            The Id of the Customer Order to update
+     * @param id
+     *            The id of the Customer Order to update
+     * @param review
+     *            The Customer's review for the Order
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
