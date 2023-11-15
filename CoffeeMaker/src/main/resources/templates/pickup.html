@@ -23,10 +23,14 @@
 				$scope.validAccess = false;
 			}
 			
-			$http.get("/api/v1/orders").then(function(response) {
-				$scope.orders = response.data;
-				$scope.sortOrders();
-			});
+			$scope.getOrders = function() {
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.orders = response.data;
+					$scope.sortOrders();
+				});
+			}
+			
+			$scope.getOrders();
 			
 			$scope.toOrder = [];
 			
@@ -104,8 +108,13 @@
 				}
 				$scope.pickupForm.$setPristine(); // reset Form
 			}
+			
+			const interval = setInterval(function() {
+		      $scope.getOrders();
+			}, 5000);
+			
 		});
-
+		
 		/*]]>*/
 	</script>
 
