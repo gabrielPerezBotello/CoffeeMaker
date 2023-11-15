@@ -1,7 +1,5 @@
 package edu.ncsu.csc.CoffeeMaker.models;
 
-import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,11 +46,6 @@ public class CustomerOrder extends DomainObject {
     private OrderStatus                    orderStatus;
 
     /**
-     * orderID for Order
-     */
-    private final Integer                  orderID;
-
-    /**
      * review for Order
      */
     private String                         review;
@@ -74,7 +67,6 @@ public class CustomerOrder extends DomainObject {
     public CustomerOrder () {
         this.customerName = "";
         this.orderStatus = OrderStatus.PENDING;
-        this.orderID = 0;
         this.review = REVIEW_NOT_SET;
         this.placementTime = System.currentTimeMillis();
         this.payment = PAYMENT_NOT_SET;
@@ -91,33 +83,15 @@ public class CustomerOrder extends DomainObject {
      * @param recipe
      *            the recipe that the customer chose to order
      */
-    public CustomerOrder ( final String customerName, final Integer orderID, final Recipe recipe ) {
+    public CustomerOrder ( final String customerName, final Recipe recipe ) {
         this.customerName = customerName;
         this.orderStatus = OrderStatus.PENDING;
-        this.orderID = orderID;
         this.review = REVIEW_NOT_SET;
         this.placementTime = System.currentTimeMillis();
         this.payment = PAYMENT_NOT_SET;
         this.recipe = recipe;
 
     }
-
-    // /**
-    // * Constructor
-    // *
-    // * @param order
-    // * the order to be placed
-    // */
-    // public CustomerOrder ( final CustomerOrder order ) {
-    // this.customerName = customerName;
-    // this.orderStatus = OrderStatus.PENDING;
-    // this.orderID = orderID;
-    // this.review = REVIEW_NOT_SET;
-    // this.placementTime = System.currentTimeMillis();
-    // this.payment = PAYMENT_NOT_SET;
-    // this.recipe = recipe;
-    //
-    // }
 
     /**
      * advances the order to the next stage
@@ -148,15 +122,6 @@ public class CustomerOrder extends DomainObject {
      */
     public String getCustomerName () {
         return customerName;
-    }
-
-    /**
-     * returns OrderID
-     *
-     * @return Order ID
-     */
-    public Integer getOrderID () {
-        return orderID;
     }
 
     /**
@@ -276,8 +241,7 @@ public class CustomerOrder extends DomainObject {
     }
 
     @Override
-    public Serializable getId () {
-
+    public Long getId () {
         return id;
     }
 

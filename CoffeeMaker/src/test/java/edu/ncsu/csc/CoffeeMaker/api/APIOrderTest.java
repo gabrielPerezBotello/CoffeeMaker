@@ -74,7 +74,7 @@ public class APIOrderTest {
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        final CustomerOrder o = new CustomerOrder( "sharon", recipeService.findByName( "Delicious Not-Coffee" ) );
         System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
@@ -103,16 +103,19 @@ public class APIOrderTest {
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        CustomerOrder o = new CustomerOrder( "sharon", recipeService.findByName( "Delicious Not-Coffee" ) );
         System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
 
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 1 Order in the CoffeeMaker" );
+        o = service.findByCustomerName( "sharon" );
 
-        mvc.perform( delete( "/api/v1/orders/1" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( 1 ) ) ).andExpect( status().isOk() );
+        final Long id = o.getId();
+
+        mvc.perform( delete( "/api/v1/orders/" + id.toString() ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( id ) ) ).andExpect( status().isOk() );
 
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Orders in the CoffeeMaker" );
     }
@@ -130,7 +133,7 @@ public class APIOrderTest {
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
 
-        final CustomerOrder o = new CustomerOrder( "sharon", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        final CustomerOrder o = new CustomerOrder( "sharon", recipeService.findByName( "Delicious Not-Coffee" ) );
         System.out.println( TestUtils.asJsonString( o ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
@@ -145,7 +148,7 @@ public class APIOrderTest {
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe2 ) ) ).andExpect( status().isOk() );
 
-        final CustomerOrder o2 = new CustomerOrder( "Jamie", 1, recipeService.findByName( "Delicious Not-Coffee" ) );
+        final CustomerOrder o2 = new CustomerOrder( "Jamie", recipeService.findByName( "Delicious Not-Coffee" ) );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o2 ) ) ).andExpect( status().isOk() );
@@ -156,27 +159,28 @@ public class APIOrderTest {
     @Test
     @Transactional
     public void testAdvanceOrder () throws Exception {
-
-        /* Tests to make sure that our cap of 3 recipes is enforced */
-
+        // Add recipe to database
         final Recipe recipe = new Recipe();
         recipe.setName( "Delicious Not-Coffee" );
         recipe.setPrice( 0 );
 
         mvc.perform( post( "/api/v1/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe ) ) ).andExpect( status().isOk() );
-
-        final CustomerOrder o = new CustomerOrder( "sharon", 125, recipeService.findByName( "Delicious Not-Coffee" ) );
+        // Add customer order to database
+        CustomerOrder o = new CustomerOrder( "sharon", recipeService.findByName( "Delicious Not-Coffee" ) );
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( o ) ) ).andExpect( status().isOk() );
 
+        o = service.findByCustomerName( "sharon" );
+        final Long id = o.getId();
+
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 1 Order in the CoffeeMaker" );
 
-        mvc.perform( put( "/api/v1/orders/fulfill/125" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( "125" ) ) ).andExpect( status().isOk() );
+        mvc.perform( put( "/api/v1/orders/fulfill/" + id.toString() ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( id ) ) ).andExpect( status().isOk() );
 
-        mvc.perform( put( "/api/v1/orders/pickup/125" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( "125" ) ) ).andExpect( status().isOk() );
+        mvc.perform( put( "/api/v1/orders/pickup/" + id.toString() ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( id ) ) ).andExpect( status().isOk() );
 
     }
 
