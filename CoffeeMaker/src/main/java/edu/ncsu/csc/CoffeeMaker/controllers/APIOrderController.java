@@ -111,7 +111,7 @@ public class APIOrderController extends APIController {
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @DeleteMapping ( BASE_PATH + "/orders/{Id}" )
+    @DeleteMapping ( BASE_PATH + "/orders/{id}" )
     public ResponseEntity deleteCustomerOrder ( @PathVariable final Long id ) {
         final CustomerOrder order = service.findById( id );
         if ( null == order ) {
@@ -133,7 +133,7 @@ public class APIOrderController extends APIController {
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/fulfill/{Id}" )
+    @PutMapping ( BASE_PATH + "/orders/fulfill/{id}" )
     public ResponseEntity fulfillOrder ( @PathVariable final Long id ) {
         final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.PENDING ) ) {
@@ -155,7 +155,7 @@ public class APIOrderController extends APIController {
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/pickup/{Id}" )
+    @PutMapping ( BASE_PATH + "/orders/pickup/{id}" )
     public ResponseEntity pickupOrder ( @PathVariable final Long id, @RequestBody final String review ) {
         final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.FULFILLED ) ) {
