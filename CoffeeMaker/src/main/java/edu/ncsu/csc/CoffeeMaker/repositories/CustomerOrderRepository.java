@@ -18,13 +18,4 @@ public interface CustomerOrderRepository extends JpaRepository<CustomerOrder, Lo
      */
     CustomerOrder findByCustomerName ( String name );
 
-    /**
-     * returns the order connected with the order id
-     *
-     * @param orderID
-     *            order id
-     * @return Order
-     */
-    CustomerOrder findByOrderID ( Integer orderID );
-
 }

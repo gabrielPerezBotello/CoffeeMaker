@@ -85,10 +85,19 @@ public class APIOrderController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/orders" )
     public ResponseEntity placeOrder ( @RequestBody final CustomerOrder order ) {
+        System.out.println( order.getCustomerName() );
+        System.out.println( order.getId() );
+        System.out.println( order.getPayment() );
 
+        // final CustomerOrder newOrder = new CustomerOrder( username, 0,
+        // (Recipe) recipeService.findById( id ) );
+        final double change = order.getPayment() - order.getRecipe().getPrice();
+        if ( change < 0 ) {
+            return new ResponseEntity( errorResponse( "Not enough money paid" ), HttpStatus.CONFLICT );
+        }
         service.save( order );
-        return new ResponseEntity( successResponse( order.getCustomerName() + " successfully created" ),
-                HttpStatus.OK );
+
+        return new ResponseEntity<String>( successResponse( String.valueOf( change ) ), HttpStatus.OK );
 
     }
 
@@ -97,21 +106,20 @@ public class APIOrderController extends APIController {
      * Inventory, by making a DELETE request to the API endpoint and indicating
      * the Customer Order to delete (as a path variable)
      *
-     * @param orderID
-     *            The orderID of the Customer Order to delete
+     * @param id
+     *            The id of the Customer Order to delete
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @DeleteMapping ( BASE_PATH + "/orders/{orderID}" )
-    public ResponseEntity deleteCustomerOrder ( @PathVariable final Integer orderID ) {
-        final CustomerOrder order = service.findByOrderID( orderID );
+    @DeleteMapping ( BASE_PATH + "/orders/{id}" )
+    public ResponseEntity deleteCustomerOrder ( @PathVariable final Long id ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order ) {
-            return new ResponseEntity( errorResponse( "No order found for orderID: " + orderID ),
-                    HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for Id: " + id ), HttpStatus.NOT_FOUND );
         }
         service.delete( order );
 
-        return new ResponseEntity( successResponse( orderID + " was deleted successfully" ), HttpStatus.OK );
+        return new ResponseEntity( successResponse( id + " was deleted successfully" ), HttpStatus.OK );
     }
 
     /**
@@ -119,23 +127,22 @@ public class APIOrderController extends APIController {
      * Inventory, by making a PUT request to the API endpoint and indicating the
      * Customer Order to update (as a path variable)
      *
-     * @param orderID
-     *            The orderID of the Customer Order to update
+     * @param id
+     *            The id of the Customer Order to update
      *
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/fulfill/{orderID}" )
-    public ResponseEntity fulfillOrder ( @PathVariable final Integer orderID ) {
-        final CustomerOrder order = service.findByOrderID( orderID );
+    @PutMapping ( BASE_PATH + "/orders/fulfill/{id}" )
+    public ResponseEntity fulfillOrder ( @PathVariable final Long id ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.PENDING ) ) {
-            return new ResponseEntity( errorResponse( "No order found for order ID: " + orderID ),
-                    HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found for order ID: " + id ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
         service.save( order );
 
-        return new ResponseEntity( successResponse( order.getOrderID() + " was edited successfully" ), HttpStatus.OK );
+        return new ResponseEntity( successResponse( order.getId() + " was edited successfully" ), HttpStatus.OK );
     }
 
     /**
@@ -143,21 +150,24 @@ public class APIOrderController extends APIController {
      * Inventory, by making a PUT request to the API endpoint and indicating the
      * Customer Order to update (as a path variable)
      *
-     * @param orderID
-     *            The orderID of the Customer Order to update
+     * @param id
+     *            The id of the Customer Order to update
+     * @param review
+     *            The Customer's review for the Order
      * @return Success if the Customer Order could be deleted; an error if the
      *         Customer Order does not exist
      */
-    @PutMapping ( BASE_PATH + "/orders/pickup/{orderID}" )
-    public ResponseEntity pickupOrder ( @PathVariable final Integer orderID ) {
-        final CustomerOrder order = service.findByOrderID( orderID );
+    @PutMapping ( BASE_PATH + "/orders/pickup/{id}" )
+    public ResponseEntity pickupOrder ( @PathVariable final Long id, @RequestBody final String review ) {
+        final CustomerOrder order = service.findById( id );
         if ( null == order || !order.getStatus().equals( OrderStatus.FULFILLED ) ) {
-            return new ResponseEntity( errorResponse( "No Order found for name " + orderID ), HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No Order found for name " + id ), HttpStatus.NOT_FOUND );
         }
         order.advanceStatus();
+        order.setReview( review );
         service.save( order );
 
-        return new ResponseEntity( successResponse( order.getOrderID() + " was edited successfully" ), HttpStatus.OK );
+        return new ResponseEntity( successResponse( order.getId() + " was edited successfully" ), HttpStatus.OK );
     }
 
 }

@@ -41,17 +41,6 @@ public class CustomerOrderService extends Service<CustomerOrder, Long> {
     }
 
     /**
-     * returns the order connected with the order id
-     *
-     * @param orderID
-     *            order id
-     * @return Order
-     */
-    public CustomerOrder findByOrderID ( final Integer orderID ) {
-        return customerOrderRepository.findByOrderID( orderID );
-    }
-
-    /**
      * returns all the orders in the repository
      *
      * @return List of Orders
@@ -71,7 +60,7 @@ public class CustomerOrderService extends Service<CustomerOrder, Long> {
      */
     @Override
     public void save ( final CustomerOrder o ) { // begin save().
-        if ( o == null || o.getCustomerName() == null || o.getOrderID() == null || o.getRecipe() == null ) {
+        if ( o == null || o.getCustomerName() == null || o.getRecipe() == null ) {
             return;
         }
         super.save( o );
