@@ -22,7 +22,7 @@
 			if($scope.user != "CUSTOMER"){
 				$scope.validAccess = false;
 			}
-			
+						
 			$scope.getOrders = function() {
 				$http.get("/api/v1/orders").then(function(response) {
 					$scope.orders = response.data;
@@ -93,11 +93,13 @@
 				$scope.submissionSuccess = false;
 				i = 0;
 				for(order in $scope.toOrder){
-					$http.put("/api/v1/orders/pickup/" + $scope.toOrder[i].orderID, $scope.review).then(
+					$http.put("/api/v1/orders/pickup/" + BigInt($scope.toOrder[i].id), ($scope.review == undefined ? "N/A" : $scope.review)).then(
 						function(response) {
 							console.log(response);
 							//$scope.change = response.data.message;
 							$scope.submissionSuccess = true;
+							$scope.getOrders();
+							$scope.review = "";
 						}, function(errResponse) {
 							console.log(errResponse);
 							$scope.submissionFailure = true;
@@ -148,7 +150,7 @@
 				<br /> <label ng-show="selected">Leave a Review?</label> 
 					<input ng-show="selected" type="text" ng-model="review" name="review"
 						class="form-control input-sm"
-						required="0" />
+						/>
 					<div> </div>
 					
 					<input ng-show="selected" type="submit" ng-click="pickup()" value="Pickup Order"

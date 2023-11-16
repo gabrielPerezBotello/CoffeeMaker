@@ -75,6 +75,46 @@ th {
 			if($scope.user != "MANAGER" && $scope.user != "BARISTA"){
 				$scope.validAccess = false;
 			}
+			
+			$scope.getOrders = function() {
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.orders = response.data;
+					$scope.filterOrders();
+				});
+			}
+			$scope.getOrders();
+			
+			$scope.filterOrders = function() {
+				$scope.pendingOrders = [];
+				idx = 0;
+				i = 0;
+				for(order in $scope.orders){
+					if($scope.orders[idx].status == "PENDING"){
+						$scope.pendingOrders[i] = $scope.orders[idx];
+						i++;
+					}
+					idx++;
+				}
+			}
+			
+			/*
+			 * Converts currentTimeMilis from order field to an understandable format hh:mm
+			 * for the customer to read
+			 * 
+			 */
+			$scope.msToTime = function(s) {
+			  var ms = s % 1000;
+			  s = (s - ms) / 1000;
+			  var secs = s % 60;
+			  s = (s - secs) / 60;
+			  var mins = s % 60;
+			  var hrs = ((s - mins) / 60 - 5) % 24;
+			  
+			  if(hrs > 12){
+			    return hrs - 12 + ':' + ('00' + mins).slice(-2) + ' PM';
+			  }
+			  return hrs + ':' + ('00' + mins).slice(-2) + ' AM';
+			}
 
 			$scope.reset = function() {
 				$scope.orders = {
@@ -97,17 +137,18 @@ th {
 				$scope.failure = false;
 				$scope.duplicate = false;
 				$scope.tempName = $scope.orders.name;
-
-				$http.post("/api/v1/inventory", $scope.orders).then(
-						function(success) {
-							$scope.success = true;
-							$scope.failure = false;
-							$scope.duplicate = false;
-						}, function(rejection) {
-							$scope.success = false;
-							$scope.failure = false;
-							$scope.duplicate = true;
-							console.error("Error while fulfilling order");
+				console.log($scope.toFulfill);
+				$http.put("/api/v1/orders/fulfill/" + BigInt($scope.toFulfill)).then(
+						function(response) {
+							console.log(response);
+							console.log("here");
+							//$scope.change = response.data.message;
+							$scope.submissionSuccess = true;
+							$scope.getOrders();
+						}, function(errResponse) {
+							console.log(errResponse);
+							$scope.submissionFailure = true;
+							$scope.error = "Error while picking up order";
 						});
 			}
 
@@ -141,23 +182,19 @@ th {
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>45</td>
-							<td>Rebecca</td>
-							<td>Mocha</td>
-							<td>11/15/2023</td>
+						<tr ng-repeat="order in pendingOrders track by $index">
+							<td>{{order.id}}</td>
+							<td>{{order.customerName}}</td>
+							<td>{{order.recipe.name}}</td>
+							<td>{{msToTime(order.placementTime)}}</td>
 						</tr>
 					</tbody>
 				</table>
 				
 				<h3>Fulfill Order</h3><br>
 				<label class="control-lable spacer">Select an Order to Fill</label>
-				<select class="dropdown" id="cars" name="cars">
-					<option >Choose Order</option>
-					<option value="volvo">Volvo</option>
-					<option value="saab">Saab</option>
-					<option value="fiat">Fiat</option>
-					<option value="audi">Audi</option>
+				<select class="dropdown" ng-model="toFulfill">
+					<option ng-repeat="order in pendingOrders track by $index">{{order.id}}</option>
 				</select>
 			</div>
 
