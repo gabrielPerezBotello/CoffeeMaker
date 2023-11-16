@@ -153,6 +153,10 @@ th {
 			}
 
 			$scope.reset();
+			
+			const interval = setInterval(function() {
+		      $scope.getOrders();
+			}, 5000);
 
 		});
 		/*]]>*/
