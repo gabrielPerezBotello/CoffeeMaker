@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>View/Fulfill Orders</title>
+<style>
+input.ng-valid {
+	background-color: lightgreen;
+}
+
+input.ng-dirty.ng-invalid-required,input.ng-dirty.ng-invalid-number {
+	background-color: #EFDECD;
+}
+
+input.ng-dirty.ng-invalid-min {
+	background-color: yellow;
+}
+
+.lead {
+	width: 160px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -80px; /*half the size of width*/
+}
+
+.submit {
+	width: 220px;
+ 	position: relative;
+ 	left: 45.5%;
+ 	margin-left: -110px; /*half the size of width*/
+}
+
+.reset {
+	width: 220px;
+ 	position: relative;
+ 	left: 55%;
+ 	margin-left: -110px; /*half the size of width*/
+ 	bottom: 29px;
+}
+
+table, td {
+	border: 1px solid black;
+  	text-align: left;
+	font-size:14px;
+	border-spacing: 10px;
+	background-color: white;
+}
+
+th {
+	border: 1px solid black;
+	text-align: left;
+	font-size:14px;
+	border-spacing: 10px;
+	background-color: lightgrey;
+}
+
+
+</style>
+<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="css/app.css" />
+
+</head>
+<body>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('fulfillOrderCtrl', function($scope, $http, $q) {
+			document.getElementById("result").innerHTML = sessionStorage.userID;
+			
+			$scope.user = sessionStorage.userType;
+			
+			$scope.validAccess = true;
+			if($scope.user != "MANAGER" && $scope.user != "BARISTA"){
+				$scope.validAccess = false;
+			}
+
+			$scope.reset = function() {
+				$scope.orders = {
+					name : '',
+					amount : ''
+				};
+				if (undefined != $scope.fulfillOrderForm) {
+					$scope.fulfillOrderForm.$setPristine(); // reset Form
+				}
+			}
+
+			$scope.submit = function() {
+				$scope.fulfillOrder();
+
+				$scope.reset();
+			}
+
+			$scope.fulfillOrder = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				$scope.duplicate = false;
+				$scope.tempName = $scope.orders.name;
+
+				$http.post("/api/v1/inventory", $scope.orders).then(
+						function(success) {
+							$scope.success = true;
+							$scope.failure = false;
+							$scope.duplicate = false;
+						}, function(rejection) {
+							$scope.success = false;
+							$scope.failure = false;
+							$scope.duplicate = true;
+							console.error("Error while fulfilling order");
+						});
+			}
+
+			$scope.reset();
+
+		});
+		/*]]>*/
+	</script>
+
+
+
+	<div ng-show="validAccess" ng-app="myApp" class="generic-container ng-cloak"
+		ng-controller="fulfillOrderCtrl as ctrl">
+		<div class="margins"> </div>
+		<div class="margins"> 
+			<b id = "result" class="userHeader"></b>
+			<img src="http://pluspng.com/img-png/user-png-icon-big-image-png-2240.png" width="25" height="25">  
+		</div>
+		<div class="margins"> </div>
+		<div class="panel panel-default">
+			<div class="formcontainer">
+				<center><h1>Orders   </h1></center>
+				
+				<table class="paddingBetweenCols">
+					<thead>
+						<tr>
+							<th>OrderID </th>
+							<th>Customer Name </th>
+							<th>Recipe </th>
+							<th>Date </th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>45</td>
+							<td>Rebecca</td>
+							<td>Mocha</td>
+							<td>11/15/2023</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<h3>Fulfill Order</h3><br>
+				<label class="control-lable spacer">Select an Order to Fill</label>
+				<select class="dropdown" id="cars" name="cars">
+					<option >Choose Order</option>
+					<option value="volvo">Volvo</option>
+					<option value="saab">Saab</option>
+					<option value="fiat">Fiat</option>
+					<option value="audi">Audi</option>
+				</select>
+			</div>
+
+			<div class="formcontainer">
+				<form ng-submit="submit()" name="fulfillOrderForm"
+					class="form-horizontal">
+					<div class="form-actions"> <!-- Used to align the submit and reset buttons. -->
+						<div>
+							<input type="submit" value="Submit"
+								class="submitButton"
+								ng-disabled="fulfillOrderForm.$invalid" /> 
+							</div>
+					</div>
+				</form>
+			</div>
+			<div ng-show="success">Order {{tempName}} has been fulfilled!</div>
+			<div ng-show="failure">Please select an Order to fulfill</div>
+		</div>
+
+		<div class="margins"> </div>
+		<div class="homeLink"> 
+            <button class="btn-sm homeLink" type="button" onclick="window.location.href = 'home.html';">Return to Home</button>
+        </div> 	
+		<div class="margins"> </div>
+	</div>
+
+
+
+</body>
+</html>
