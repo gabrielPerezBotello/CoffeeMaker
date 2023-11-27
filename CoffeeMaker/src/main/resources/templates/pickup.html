@@ -24,7 +24,7 @@
 			}
 						
 			$scope.getOrders = function() {
-				$http.get("/api/v1/orders").then(function(response) {
+				$http.get("/api/v1/orders/" + sessionStorage.userID).then(function(response) {
 					$scope.orders = response.data;
 					$scope.sortOrders();
 				});
@@ -41,13 +41,21 @@
 				i = 0;
 				j = 0;
 				for(order in $scope.orders){
-					if($scope.orders[idx].status == "PENDING" && $scope.orders[idx].customerName == sessionStorage.userID){
+					if($scope.orders[idx].status == "PENDING"){
 						$scope.pendingOrders[i] = $scope.orders[idx];
 						i++;
 					}
-					else if($scope.orders[idx].status == "FULFILLED" && $scope.orders[idx].customerName == sessionStorage.userID){
+					else if($scope.orders[idx].status == "FULFILLED"){
 						$scope.fulfilledOrders[j] = $scope.orders[idx];
 						j++
+					}
+					idx++;
+				}
+				idx = 0;
+				for(order in $scope.fulfilledOrders){
+					if(Date.now() - Number($scope.fulfilledOrders[idx].placementTime) >= 295000){
+						alert("Order #" + $scope.fulfilledOrders[idx].id + " has timed out");
+						$scope.fulfilledOrders.splice(idx, 1);
 					}
 					idx++;
 				}
