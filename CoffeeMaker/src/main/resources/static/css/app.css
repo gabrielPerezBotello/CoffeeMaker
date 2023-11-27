@@ -37,6 +37,29 @@ body, .form-control {
   	cursor: pointer;
 }
 
+/* from: https://stackoverflow.com/questions/11800975/html-table-needs-spacing-between-columns-not-rows */
+.paddingBetweenCols td, th {
+  padding: 0px 15px 0px 5px;
+}
+
+.spacer {
+	margin: 0px 20px 0px 0px;
+}
+
+.dropdown {
+	display:inline;
+	width: 10%;
+	font-size: 12px;
+}
+
+.submitButton {
+	cursor: pointer;
+	font-size: 14px;
+	display: block;
+	float:left;
+	width: 10%;
+}
+
 .floatRight {
 	float: right;
 	margin-right: 18px;

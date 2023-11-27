@@ -128,6 +128,19 @@ public class MappingController {
      *            underlying UI model
      * @return contents of the page
      */
+    @GetMapping ( { "/vieworders", "/vieworders.html" } )
+    public String viewOrdersPage ( final Model model ) {
+        return "viewOrders";
+    }
+
+    /**
+     * On a GET request to /order, the OrderController will return
+     * /src/main/resources/templates/order.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
     @GetMapping ( { "/order", "/order.html" } )
     public String orderPage ( final Model model ) {
         return "order";
