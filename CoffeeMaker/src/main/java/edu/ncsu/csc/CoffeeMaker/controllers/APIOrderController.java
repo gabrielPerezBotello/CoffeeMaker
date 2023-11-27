@@ -61,17 +61,25 @@ public class APIOrderController extends APIController {
      * @return response to the request
      */
     @GetMapping ( BASE_PATH + "/orders/{name}" )
-    public List<CustomerOrder> getOrdersCustomer ( @PathVariable ( "name" ) final String name ) {
+    public List<CustomerOrder> getOrdersCustomer ( @PathVariable ( "name" ) final String name ) { // begin
+                                                                                                  // func().
         final List<CustomerOrder> orders = service.findAll();
         final List<CustomerOrder> customerOrders = new ArrayList<CustomerOrder>();
-        for ( int i = 0; i < orders.size(); i++ ) {
-            if ( orders.get( i ).getCustomerName().equals( name ) ) {
+        for ( int i = 0; i < orders.size(); i++ ) { // begin for.
+
+            if ( orders.get( i ).getCustomerName().equals( name )
+                    && System.currentTimeMillis() - orders.get( i ).getPlacementTime() < 300000 ) { // begin
+                                                                                                    // if.
+
                 customerOrders.add( orders.get( i ) );
-            }
-        }
+
+            } // end if.
+
+        } // end for.
 
         return customerOrders;
-    }
+
+    } // end func().
 
     /**
      * REST API method to provide POST access to the Customer model. This is
