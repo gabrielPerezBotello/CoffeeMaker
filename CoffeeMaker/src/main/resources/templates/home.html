@@ -31,12 +31,14 @@
 			$scope.view = true
 			$scope.add = true
 			$scope.remove = true
+			$scope.history = true
 			$scope.order = false
 			$scope.pickup = false
 				
 			if($scope.user != "MANAGER") {
 				$scope.add = false
 				$scope.remove = false
+				$scope.history = false
 			}
 			if($scope.user != "BARISTA" && $scope.user != "MANAGER") {
 				$scope.inv = false
@@ -74,6 +76,7 @@
 			<button class="menuButton" type="button" ng-show="inv" onclick="window.location.href = 'inventory.html';">Update Inventory</button>
 			<button class="menuButton" type="button" ng-show="ing" onclick="window.location.href = 'ingredient.html';">Add Ingredient</button>
 			<button class="menuButton" type="button" ng-show="view" onclick="window.location.href = 'vieworders.html';">View/Fulfill Order</button>
+			<button class="menuButton" type="button" ng-show="history" onclick="window.location.href = 'history.html';">Order History</button>
 			<button class="menuButton" type="button" ng-show="add" onclick="window.location.href = 'addbarista.html';">Add Barista</button>
 			<button class="menuButton" type="button" ng-show="remove" onclick="window.location.href = 'removebarista.html';">Remove Barista</button>
 			<button class="menuButton" type="button" ng-show="order" onclick="window.location.href = 'order.html';">Place an Order</button>
