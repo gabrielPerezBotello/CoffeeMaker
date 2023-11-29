@@ -184,4 +184,17 @@ public class MappingController {
     public String removeBaristaPage ( final Model model ) {
         return "removeBarista";
     }
+
+    /**
+     * On a GET request to /history, the HistoryController will return
+     * /src/main/resources/templates/history.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/history", "/history.html" } )
+    public String historyPage ( final Model model ) {
+        return "history";
+    }
 }
