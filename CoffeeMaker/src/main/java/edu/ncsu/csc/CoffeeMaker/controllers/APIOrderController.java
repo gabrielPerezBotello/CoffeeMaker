@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.CoffeeMaker.models.CustomerOrder;
+import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.OrderStatus;
 import edu.ncsu.csc.CoffeeMaker.services.CustomerOrderService;
+import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 
 /**
  * This is the controller that holds the REST endpoints that handle CRUD
@@ -39,6 +41,12 @@ public class APIOrderController extends APIController {
      */
     @Autowired
     private CustomerOrderService service;
+    /**
+     * InventoryService object, to be autowired in by Spring to allow for
+     * manipulating the Inventory model
+     */
+    @Autowired
+    private InventoryService     iService;
 
     /**
      * REST API method to provide GET access to all Customer Orders in the
@@ -158,6 +166,13 @@ public class APIOrderController extends APIController {
         if ( null == order || !order.getStatus().equals( OrderStatus.PENDING ) ) {
             return new ResponseEntity( errorResponse( "No order found for order ID: " + id ), HttpStatus.NOT_FOUND );
         }
+
+        final Inventory inventoryCurrent = iService.getInventory(); // gets
+                                                                    // current
+                                                                    // inventory
+                                                                    // object
+        inventoryCurrent.useIngredients( order.getRecipe() );
+        iService.save( inventoryCurrent );
         order.advanceStatus();
         service.save( order );
 
