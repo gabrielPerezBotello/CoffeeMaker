@@ -67,11 +67,22 @@ public class APIOrderController extends APIController {
         final List<CustomerOrder> customerOrders = new ArrayList<CustomerOrder>();
         for ( int i = 0; i < orders.size(); i++ ) { // begin for.
 
-            if ( orders.get( i ).getCustomerName().equals( name )
-                    && System.currentTimeMillis() - orders.get( i ).getPlacementTime() < 300000 ) { // begin
-                                                                                                    // if.
+            final CustomerOrder order = orders.get( i );
 
-                customerOrders.add( orders.get( i ) );
+            if ( order.getCustomerName().equals( name ) ) { // begin if.
+                if ( OrderStatus.PENDING == order.getStatus() ) { // begin if.
+
+                    customerOrders.add( order );
+
+                } // end if.
+
+                if ( OrderStatus.FULFILLED == order.getStatus()
+                        && System.currentTimeMillis() - order.getPlacementTime() < 300000 ) { // begin
+                                                                                              // if.
+
+                    customerOrders.add( order );
+
+                } // end if.
 
             } // end if.
 

@@ -51,7 +51,7 @@ public class CustomerOrder extends DomainObject {
     private String                         review;
 
     /** placement time */
-    private final Long                     placementTime;
+    private Long                           placementTime;
 
     /** payment */
     @Min ( 0 )
@@ -100,6 +100,7 @@ public class CustomerOrder extends DomainObject {
     public void advanceStatus () {
         if ( orderStatus.equals( OrderStatus.PENDING ) ) {
             orderStatus = OrderStatus.FULFILLED;
+            this.placementTime = System.currentTimeMillis();
         }
         else if ( orderStatus.equals( OrderStatus.FULFILLED ) ) {
             orderStatus = OrderStatus.PICKEDUP;

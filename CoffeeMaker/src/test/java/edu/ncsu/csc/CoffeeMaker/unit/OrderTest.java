@@ -94,7 +94,7 @@ public class OrderTest {
         Assertions.assertEquals( o1, orders.get( 0 ), "The retrieved CustomerOrder should match the created one" );
 
         assertEquals( r1.getName(), o1.getRecipe().getName() );
-        final Long placementTime = System.currentTimeMillis();
+        final Long placementTime = o1.getPlacementTime();
         o1.advanceStatus();
         assertTrue( o1.getStatus().equals( OrderStatus.FULFILLED ) );
         assertFalse( placementTime.equals( o1.getPlacementTime() ) );
